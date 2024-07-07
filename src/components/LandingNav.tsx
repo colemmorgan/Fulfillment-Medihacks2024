@@ -8,7 +8,7 @@ import { PiSignOut } from "react-icons/pi";
 export const LandingNav = () => {
   const [user] = useAuthState(auth);
   const [showAccountMenu, setShowAccountMenu] = useState<boolean>(false);
-  const [signOut, loading, error] = useSignOut(auth);
+  const [signOut] = useSignOut(auth);
   const handleLogout = () => {
     signOut();
     setShowAccountMenu(false);
@@ -57,20 +57,20 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ showAccountMenu, handleLogout
   return (
     <>
       {showAccountMenu && (
-        <div className="absolute  bg-opacity-50 border border-main rounded-lg right-4 top-20 z-40 overflow-hidden">
+        <div className="absolute  bg-opacity-50 border border-main rounded-lg right-4 top-[72px] z-40 overflow-hidden">
           <div className=" py-5 border-b border-opaque flex items-center px-6">
             <Link to={"/account"}>
               <div className="h-10 w-10 rounded-full bg-main cursor-pointer"></div>
             </Link>
-            <div className="ml-5">
+            <div className="ml-4">
               <Link to={"/account"}>
                 <p className=" cursor-pointer semibold mb-0.5">Cole Morgan</p>
               </Link>
-              <p className="text-sm">colemmorgann@gmail.com</p>
+              <p className="text-sm ">colemmorgann@gmail.com</p>
             </div>
           </div>
           <div
-            className="py-4 flex text-dull items-center cursor-pointer hover:bg-main hover:bg-opacity-25 transition-all px-8"
+            className="py-4 flex text-dull items-center cursor-pointer hover:bg-main hover:bg-opacity-25 transition-all px-6"
             onClick={handleLogout}
           >
             <span className="mr-2 text-lg -mt-0.5">
