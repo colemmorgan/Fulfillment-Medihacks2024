@@ -3,3 +3,52 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+body {
+  background-color: #f8f8f8;
+  color: #242424;
+  font-family: "trap-regular", sans-serif;
+}
+
+
+@font-face {
+  font-family: "trap-black";
+  src: url("/fonts/trap-black.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "trap-bold";
+  src: url("/fonts/trap-bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "trap-semibold";
+  src: url("/fonts/trap-semibold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "trap-regular";
+  src: url("/fonts/trap-regular.otf") format("opentype");
+}
+
+.black {
+  font-family: "trap-black", sans-serif;
+  line-height: 1;
+}
+
+.bold {
+  font-family: "trap-bold", sans-serif;
+  line-height: 1;
+}
+
+.semibold {
+  font-family: "trap-semibold", sans-serif;
+  line-height: 1.2 !important;
+}
+
+
+.text-gradient {
+  background: linear-gradient(60deg, #9195F6, #FB88B4);
+  color: transparent;
+  background-clip: text;
+}
