@@ -25,6 +25,7 @@ export const LandingNav = () => {
           <p className="semibold text-xl">Fulfillment</p>
           <ul className="semibold flex gap-6 items-center">
             <Link to={"/"}><li>Home</li></Link>
+            <Link to={"/dashboard"}><li>Dashboard</li></Link>
             <li>About</li>
             {user ? (
               <li
