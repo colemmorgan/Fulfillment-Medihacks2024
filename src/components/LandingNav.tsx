@@ -24,7 +24,7 @@ export const LandingNav = () => {
         <div className="max-w-[1200px] mx-auto flex items-center justify-between h-full px-4 relative">
           <p className="semibold text-xl">Fulfillment</p>
           <ul className="semibold flex gap-6 items-center">
-            <li>Home</li>
+            <Link to={"/"}><li>Home</li></Link>
             <li>About</li>
             {user ? (
               <li

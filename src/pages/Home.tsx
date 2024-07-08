@@ -9,13 +9,13 @@ export const Home = () => {
   return (
     <>
       <LandingNav/>
-      <div className="px-12 mt-24">
+      <div className="px-10 mt-20 pb-32">
         <div className="relative z-20 text-center flex flex-col justify-center">
-          <p className=" text-5xl ml-2 mb-6 bold ">Introducing</p>
-          <h1 className="text-main text-[145px] font-semibold leading-none black ">
+          <p className=" text-[42px] ml-2 mb-6 bold ">Introducing</p>
+          <h1 className="text-main text-[140px] font-semibold leading-none black ">
             Fulfillment
           </h1>
-          <p className=" text-[60px] font-semibold leading-none bold">
+          <p className=" text-[52px] font-semibold leading-none bold">
             A Medical Education Game
           </p>
           <div className="mt-5 flex justify-center gap-4  pl-2">
@@ -26,6 +26,16 @@ export const Home = () => {
               Login
             </span>
           </div>
+         <div className="p-6 pt-0 border border-[#CACADD] rounded-2xl max-w-[1164px] mx-auto mt-16 bg-[#f2f4f5]">
+         <div className="w-full h-8 flex justify-start items-center space-x-2 px-3 ">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+          </div>
+         <figure className="max-w-[1100px] mx-auto  rounded-xl overflow-hidden border border-[#CACADD]">
+            <img src="/images/dashboard.png" alt="" className=""/>
+          </figure>
+         </div>
         </div>
       </div>
     </>

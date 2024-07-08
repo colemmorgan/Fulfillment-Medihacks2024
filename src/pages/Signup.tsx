@@ -53,7 +53,7 @@ export const Signup = () => {
       if (!newUser) return;
       navigate("/");
     } catch (error: any) {
-        toast.dismiss("loadingToast");
+      toast.dismiss("loadingToast");
       toast.error(error.message, {
         position: "top-center",
         autoClose: 3000,
@@ -64,8 +64,13 @@ export const Signup = () => {
     }
   };
   useEffect(() => {
-    if(error) toast.error(error.message, {position: 'top-center', autoClose: 3000, theme: "dark"})
-  },[error])
+    if (error)
+      toast.error(error.message, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
+  }, [error]);
   return (
     <>
       <nav>
@@ -75,7 +80,9 @@ export const Signup = () => {
             <Link to={"/"}>
               <li>Home</li>
             </Link>
-            <li>Sign Up</li>
+            <Link to={"/login"}>
+              <li>Login</li>
+            </Link>
           </ul>
         </div>
       </nav>
@@ -91,7 +98,11 @@ export const Signup = () => {
             <PiHandWavingBold />
           </span>
           <p className="mb-6 mt-4 semibold text-4xl">Sign Up</p>
-          <form action="" className=" w-full semibold flex flex-col gap-5" onSubmit={handleRegister}>
+          <form
+            action=""
+            className=" w-full semibold flex flex-col gap-5"
+            onSubmit={handleRegister}
+          >
             <div className="flex">
               <div className="w-1/2">
                 <label htmlFor="" className="mb-1 block text-lg">
@@ -150,7 +161,9 @@ export const Signup = () => {
               type="submit"
               className="w-full bg-opaque hover:bg-main transition-all text-sm py-2.5 rounded-md -mt-1 "
             >
-              <span className="mt-1 bold">{loading ? "Registering..." : "Register"}</span>
+              <span className="mt-1 bold">
+                {loading ? "Registering..." : "Register"}
+              </span>
             </button>
           </form>
           <p className="mt-5">

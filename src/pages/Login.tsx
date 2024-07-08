@@ -60,7 +60,8 @@ export const Login: React.FC = () => {
             <Link to={"/"}>
               <li>Home</li>
             </Link>
-            <li>Sign Up</li>
+            <Link to={"/signup"}>
+            <li>Sign Up</li></Link>
           </ul>
         </div>
       </nav>
