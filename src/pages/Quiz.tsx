@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QuestionChoice from "../components/quiz-components/QuestionChoice";
-import {  useParams } from "react-router-dom";
-import { firestore } from "../firebase/firebase";
-import {
-  collection,
-  getDocs,
-  CollectionReference,
-  DocumentData,
-} from "@firebase/firestore";
+import { useParams } from "react-router-dom";
 import {
   currentProblemAtom,
   revealAnswersAtom,
@@ -16,7 +9,7 @@ import {
 import { useRecoilState } from "recoil";
 import CourseNav from "../components/quiz-components/CourseNav";
 import CourseLoading from "../components/quiz-components/CourseLoading";
-
+import fetchQuestions from "../firebase/getters/getCourseProblems";
 
 interface Question {
   id: string;
@@ -34,11 +27,10 @@ const Quiz: React.FC = () => {
   const [currentProblem, setCurrentProblem] =
     useRecoilState(currentProblemAtom);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
-  const [selectedAnswer, setSelectedAnswer] = useRecoilState(
+  const [_, setSelectedAnswer] = useRecoilState(
     setSelectedAnswerAtom
   );
   const [revealAnswers, setRevealAnswers] = useRecoilState(revealAnswersAtom);
-  
 
   const resetStates = () => {
     setSelectedAnswer(null);
@@ -46,16 +38,16 @@ const Quiz: React.FC = () => {
   };
 
   const nextProblem = () => {
-    if(!revealAnswers) return
-    resetStates()
-    setProblem()
-  }
+    if (!revealAnswers) return;
+    resetStates();
+    setProblem();
+  };
 
   const skipProblem = () => {
-    if(revealAnswers) return
-    resetStates()
-    setProblem()
-  }
+    if (revealAnswers) return;
+    resetStates();
+    setProblem();
+  };
 
   const setProblem = () => {
     if (questions.length > 0) {
@@ -78,33 +70,22 @@ const Quiz: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      if (!courseId) {
-        setError("No course ID provided");
-        setLoading(false);
-        return;
-      }
-
+    const fetchQuestionsData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const questionsCollection = collection(
-          firestore,
-          courseId
-        ) as CollectionReference<DocumentData>;
-        const querySnapshot = await getDocs(questionsCollection);
-        const fetchedQuestions: Question[] = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Question, "id">),
-        }));
-        setQuestions(fetchedQuestions);
-        setLoading(false);
+        const fetchedQuestions = await fetchQuestions(courseId);
+        if (fetchedQuestions && fetchedQuestions.length > 0) {
+          setQuestions(fetchedQuestions);
+        }
       } catch (err) {
-        console.error("Error fetching questions: ", err);
         setError("Failed to fetch questions. Please try again later.");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchQuestions();
+    fetchQuestionsData();
 
     return () => {
       resetStates();
@@ -136,7 +117,14 @@ const Quiz: React.FC = () => {
           ))}
         </ul>
         <div className="flex justify-between items-center mt-16 bg-[#f2f4f5] py-2 px-4 border border-borderColor rounded-md">
-          <button className={`px-2 text-lg ${revealAnswers ? "opacity-0" : "cursor-pointer"}`} onClick={skipProblem}>Skip Problem</button>
+          <button
+            className={`px-2 text-lg ${
+              revealAnswers ? "opacity-0" : "cursor-pointer"
+            }`}
+            onClick={skipProblem}
+          >
+            Skip Problem
+          </button>
           <button
             className={`bg-opaque px-6 py-3 rounded-md ${
               revealAnswers ? "" : "opacity-0 cursor-not-allowed"

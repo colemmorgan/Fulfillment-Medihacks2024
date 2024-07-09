@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PiHandWavingBold } from "react-icons/pi";
 import { useEffect, useState } from "react";
-import { auth } from "../firebase/firebase";
+import { auth, firestore } from "../firebase/firebase";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
+import createUser from "../firebase/schema/CreateUser";
+import { doc, setDoc } from "@firebase/firestore";
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -51,6 +53,8 @@ export const Signup = () => {
         inputs.password
       );
       if (!newUser) return;
+      const userData = createUser(newUser,inputs)
+      await setDoc(doc(firestore,"users",newUser.user.uid), userData)
       navigate("/");
     } catch (error: any) {
       toast.dismiss("loadingToast");
