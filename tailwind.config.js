@@ -12,6 +12,7 @@ module.exports = {
         main: "#9195F6",
         opaque:"rgba(145, 149, 246,0.6)",
         black: "#242424",
+        borderColor: "#CACADD",
         pink: "#FB88B4"
       }
     },

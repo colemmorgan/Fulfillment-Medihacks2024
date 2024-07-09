@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
+import Quiz from './pages/Quiz';
+import { RecoilRoot } from 'recoil';
 
 function App() {
 
@@ -15,6 +17,7 @@ function App() {
   return (
     <>
       <Router>
+        <RecoilRoot>
       <ToastContainer/>
         <Routes>
           <Route path='/' element={<Home/>}/>
@@ -22,7 +25,9 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/courses' element={<Courses/>}/>
+          <Route path='/courses/:courseId' element={<Quiz/>}/>
         </Routes>
+        </RecoilRoot>
       </Router>
     </>
   )

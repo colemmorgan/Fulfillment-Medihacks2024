@@ -1,5 +1,6 @@
 import React from "react";
 import { LandingNav } from "../components/LandingNav";
+import { Link } from "react-router-dom";
 
 type CoursesProps = {};
 
@@ -36,7 +37,7 @@ const Course: React.FC<CourseProps> = ({img}) => {
             <p className="mt-3 max-w-[360px]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam officia dolor nobis iusto sapiente hic neque enim repellat perferendis libero?</p>
         </div>
         <div className="flex justify-between mt-2 items-center">
-        <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all">Launch Course</button>
+        <Link to={"/courses/test-course"}><button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all">Launch Course</button></Link>
         <span className="semibold">0%</span>
         </div>
     </div>
