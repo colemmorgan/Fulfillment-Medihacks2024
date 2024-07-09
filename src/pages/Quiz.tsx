@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QuestionChoice from "../components/quiz-components/QuestionChoice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   currentProblemAtom,
   revealAnswersAtom,
@@ -10,6 +10,8 @@ import { useRecoilState } from "recoil";
 import CourseNav from "../components/quiz-components/CourseNav";
 import CourseLoading from "../components/quiz-components/CourseLoading";
 import fetchQuestions from "../firebase/getters/getCourseProblems";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
 
 interface Question {
   id: string;
@@ -23,6 +25,8 @@ const Quiz: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [user, userLoading] = useAuthState(auth);
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [currentProblem, setCurrentProblem] =
     useRecoilState(currentProblemAtom);
@@ -91,6 +95,12 @@ const Quiz: React.FC = () => {
       resetStates();
     };
   }, [courseId]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [loading, user, navigate]);
 
   useEffect(() => {
     setProblem();
