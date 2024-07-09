@@ -25,7 +25,7 @@ const Dashboard:React.FC<DashboardProps> = () => {
             <div className="pt-6 max-w-[1324px] mx-auto px-6">
             <h1 className='text-center semibold text-4xl'>Dashboard</h1>
             <div className="">
-                <div className="grid grid-cols-12 gap-2 mt-8">
+                <div className="grid grid-cols-12 gap-2 mt-10">
                     <Account/>
                     <Activity/>
                     <DailyActivites/>

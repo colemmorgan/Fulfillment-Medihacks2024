@@ -4,13 +4,17 @@ import { Link } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { PiSignOut } from "react-icons/pi";
+import { useRecoilState } from "recoil";
+import { userDataAtom } from "../atoms/user-data-atoms";
 
 export const LandingNav = () => {
   const [user] = useAuthState(auth);
+  const [_, setUserData] = useRecoilState(userDataAtom)
   const [showAccountMenu, setShowAccountMenu] = useState<boolean>(false);
   const [signOut] = useSignOut(auth);
   const handleLogout = () => {
     signOut();
+    setUserData(null)
     setShowAccountMenu(false);
     toast.success("Successfully logged out", {
       position: "top-center",
