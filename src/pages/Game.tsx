@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import {
+  GamePoints,
   Question,
   QUESTIONS,
   SIMULATE_SECOND_PLAYER,
@@ -41,11 +42,11 @@ const Game: React.FC = () => {
 
       let newScore = scores[playerId] || 0;
       if (answer === currentQuestion.correctAnswer) {
-        newScore += 15;
+        newScore += GamePoints.CORRECT_ANSWER;
       } else if (answer === null) {
-        newScore -= 10;
+        newScore -= GamePoints.MISSED_ANSWER;
       } else {
-        newScore -= 5;
+        newScore -= GamePoints.WRONG_ANSWER;
       }
 
       const gameRef = doc(db, "games", gameId);

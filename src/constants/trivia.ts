@@ -1,6 +1,12 @@
 export const SIMULATE_SECOND_PLAYER = true;
 export const TIME_LIMIT = 15;
 
+export enum GamePoints {
+  CORRECT_ANSWER = +15,
+  MISSED_ANSWER = -10,
+  WRONG_ANSWER = -5,
+}
+
 export interface Question {
   id: string;
   question: string;
