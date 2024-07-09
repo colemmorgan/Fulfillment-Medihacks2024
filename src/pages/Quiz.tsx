@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QuestionChoice from "../components/quiz-components/QuestionChoice";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   currentProblemAtom,
   revealAnswersAtom,
@@ -25,16 +25,15 @@ const Quiz: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, userLoading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [currentProblem, setCurrentProblem] =
     useRecoilState(currentProblemAtom);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
-  const [_, setSelectedAnswer] = useRecoilState(
-    setSelectedAnswerAtom
-  );
+  const [_, setSelectedAnswer] = useRecoilState(setSelectedAnswerAtom);
   const [revealAnswers, setRevealAnswers] = useRecoilState(revealAnswersAtom);
+
 
   const resetStates = () => {
     setSelectedAnswer(null);
@@ -106,6 +105,10 @@ const Quiz: React.FC = () => {
     setProblem();
   }, [questions]);
 
+  useEffect(() => {
+
+  },[])
+
   if (loading) {
     return <CourseLoading />;
   }
@@ -117,7 +120,7 @@ const Quiz: React.FC = () => {
   return (
     <>
       <CourseNav />
-      <div className="max-w-[924px] px-3 mx-auto mt-14">
+      <div className="max-w-[924px] px-3 mx-auto mt-12">
         <p className="semibold text-3xl">
           {currentProblem && currentProblem.question}
         </p>
@@ -126,7 +129,7 @@ const Quiz: React.FC = () => {
             <QuestionChoice key={index} value={item} />
           ))}
         </ul>
-        <div className="flex justify-between items-center mt-16 bg-[#f2f4f5] py-2 px-4 border border-borderColor rounded-md">
+        <div className="flex justify-between items-center mt-12 bg-[#f2f4f5] py-3 px-4 border border-borderColor rounded-md">
           <button
             className={`px-2 text-lg ${
               revealAnswers ? "opacity-0" : "cursor-pointer"
@@ -136,7 +139,7 @@ const Quiz: React.FC = () => {
             Skip Problem
           </button>
           <button
-            className={`bg-opaque px-6 py-3 rounded-md ${
+            className={`bg-opaque px-6 py-2.5 rounded-md ${
               revealAnswers ? "" : "opacity-0 cursor-not-allowed"
             }`}
             onClick={nextProblem}
@@ -146,6 +149,7 @@ const Quiz: React.FC = () => {
           </button>
         </div>
       </div>
+      
     </>
   );
 };

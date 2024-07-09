@@ -65,23 +65,23 @@ export const Login: React.FC = () => {
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4">
-        <div className="relative flex flex-col  pt-32 ">
-          <p className="mb-12 semibold text-5xl text-center">Welcome Back!</p>
-          <img src="/images/login.svg" alt="" className="max-w-[550px]" />
+      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4 pt-24">
+        <div className="relative flex flex-col   ">
+          <p className="mb-12 semibold text-4xl text-center">Welcome Back!</p>
+          <img src="/images/login.svg" alt="" className="max-w-[500px]" />
         </div>
-        <div className="pt-32 max-w-[450px] w-full flex flex-col items-center">
+        <div className="max-w-[450px] w-full flex flex-col items-center">
           <span className="text-main text-6xl">
             <PiHandWavingBold />
           </span>
-          <p className="my-4 semibold text-4xl">Login</p>
+          <p className="my-4 semibold text-3xl">Login</p>
           <form
             action=""
             className=" w-full semibold flex flex-col gap-5"
             onSubmit={handleLogin}
           >
             <div className="">
-              <label htmlFor="" className="mb-1 inline-block text-lg">
+              <label htmlFor="" className="mb-1 inline-block">
                 Email:
               </label>
               <input
@@ -90,11 +90,11 @@ export const Login: React.FC = () => {
                 value={inputs.email}
                 onChange={handleInputChange}
                 placeholder="email@email.com"
-                className="w-full inline-block border border-opaque rounded-md px-4 py-3 outline-main"
+                className="w-full inline-block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main"
               />
             </div>
             <div className="">
-              <label htmlFor="" className="mb-1 inline-block text-lg">
+              <label htmlFor="" className="mb-1 inline-block ">
                 Password:
               </label>
               <input
@@ -103,11 +103,11 @@ export const Login: React.FC = () => {
                 value={inputs.password}
                 onChange={handleInputChange}
                 placeholder="Top Secret"
-                className="w-full inline-block border border-opaque rounded-md px-4 py-3 outline-main"
+                className="w-full inline-block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main"
               />
             </div>
             <button
-              className="w-full bg-opaque text-sm py-2.5 rounded-md -mt-1"
+              className="w-full bg-opaque text-sm py-2 rounded-md -mt-1 hover:bg-main"
               type="submit"
             >
               <span className="mt-1 bold">

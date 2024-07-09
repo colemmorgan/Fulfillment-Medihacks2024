@@ -9,15 +9,35 @@ import "react-toastify/dist/ReactToastify.css"
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Quiz from './pages/Quiz';
-import { RecoilRoot } from 'recoil';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from './firebase/firebase';
+import useGetUserData from './firebase/getters/useGetUserData';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { userDataAtom, userDataLoading } from './atoms/user-data-atoms';
+
 
 function App() {
 
 
+  const [user] = useAuthState(auth);
+  const { userData, loading } = useGetUserData(user?.uid);
+  const [_, setUserData] = useRecoilState(userDataAtom)
+  const [__, setUserDataLoading] = useRecoilState(userDataLoading)
+
+  useEffect(() => {
+    console.log("fired")
+    setUserData(userData)
+  },[userData])
+
+  useEffect(() => {
+    console.log("fired")
+    setUserDataLoading(loading)
+  },[loading])
+
   return (
     <>
-      <Router>
-        <RecoilRoot>
+      <Router>   
       <ToastContainer/>
         <Routes>
           <Route path='/' element={<Home/>}/>
@@ -27,7 +47,6 @@ function App() {
           <Route path='/courses' element={<Courses/>}/>
           <Route path='/courses/:courseId' element={<Quiz/>}/>
         </Routes>
-        </RecoilRoot>
       </Router>
     </>
   )

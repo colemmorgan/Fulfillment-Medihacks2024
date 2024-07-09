@@ -22,7 +22,7 @@ export const Signup = () => {
     password: "",
   });
 
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [createUserWithEmailAndPassword, _, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,26 +90,26 @@ export const Signup = () => {
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4">
-        <div className="relative flex flex-col  pt-32 ">
-          <p className="mb-12 semibold text-5xl text-center pl-16">
+      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4 pt-20">
+        <div className="relative flex flex-col">
+          <p className="mb-12 semibold text-4xl text-center pl-16">
             Nice to meet you!
           </p>
-          <img src="/images/signup.svg" alt="" className="max-w-[550px]" />
+          <img src="/images/signup.svg" alt="" className="max-w-[475px]" />
         </div>
-        <div className="pt-28 max-w-[450px] w-full flex flex-col items-center">
-          <span className="text-main text-6xl">
+        <div className=" max-w-[450px] w-full flex flex-col items-center">
+          <span className="text-main text-5xl">
             <PiHandWavingBold />
           </span>
-          <p className="mb-6 mt-4 semibold text-4xl">Sign Up</p>
+          <p className="mb-6 mt-4 semibold text-3xl">Sign Up</p>
           <form
             action=""
             className=" w-full semibold flex flex-col gap-5"
             onSubmit={handleRegister}
           >
             <div className="flex">
-              <div className="w-1/2">
-                <label htmlFor="" className="mb-1 block text-lg">
+              <div className="w-1/2 pr-1">
+                <label htmlFor="" className="mb-1 block">
                   First Name:
                 </label>
                 <input
@@ -118,11 +118,11 @@ export const Signup = () => {
                   value={inputs.firstName}
                   onChange={(e) => handleInputChange(e)}
                   placeholder="John"
-                  className="block border border-opaque rounded-md px-4 py-3 outline-main max-w-[95%]"
+                  className="block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main max-w-[95%] w-full"
                 />
               </div>
-              <div className="w-1/2">
-                <label htmlFor="" className="mb-1 block text-lg">
+              <div className="w-1/2 pl-1">
+                <label htmlFor="" className="mb-1 block">
                   First Name:
                 </label>
                 <input
@@ -131,12 +131,12 @@ export const Signup = () => {
                   value={inputs.lastName}
                   onChange={(e) => handleInputChange(e)}
                   placeholder="Doe"
-                  className="block border border-opaque rounded-md px-4 py-3 outline-main"
+                  className="block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main w-full"
                 />
               </div>
             </div>
             <div className="">
-              <label htmlFor="" className="mb-1 inline-block text-lg">
+              <label htmlFor="" className="mb-1 inline-block">
                 Email:
               </label>
               <input
@@ -145,7 +145,7 @@ export const Signup = () => {
                 value={inputs.email}
                 onChange={(e) => handleInputChange(e)}
                 placeholder="email@email.com"
-                className="w-full inline-block border border-opaque rounded-md px-4 py-3 outline-main"
+                className="w-full inline-block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main"
               />
             </div>
             <div className="">
@@ -158,12 +158,12 @@ export const Signup = () => {
                 value={inputs.password}
                 onChange={(e) => handleInputChange(e)}
                 placeholder="Top Secret"
-                className="w-full inline-block border border-opaque rounded-md px-4 py-3 outline-main"
+                className="w-full inline-block border border-opaque rounded-md px-4 py-2.5 text-sm outline-main"
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-opaque hover:bg-main transition-all text-sm py-2.5 rounded-md -mt-1 "
+              className="w-full bg-opaque hover:bg-main transition-all text-sm py-2 rounded-md -mt-1 "
             >
               <span className="mt-1 bold">
                 {loading ? "Registering..." : "Register"}

@@ -29,14 +29,20 @@ const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value }) => {
   return (
     <div
       onClick={handleClick}
-      className={`relative max-w-[900px] w-full py-6 px-8 border border-borderColor flex items-center rounded-md cursor-pointer
+      className={`relative max-w-[900px] w-full py-5 px-8 border border-borderColor flex items-center rounded-md cursor-pointer
         ${
           revealAnswers
             ? value === currentProblem?.correctAnswer
               ? "bg-opaque"
-              : "bg-red-200"
+              : ""
             : "bg-[#f2f4f5]"
-        }`}
+        } ${
+        revealAnswers &&
+        value === selectedAnswer &&
+        selectedAnswer !== currentProblem?.correctAnswer
+          ? "bg-red-200"
+          : ""
+      }`}
     >
       <AnswerBubble letter={"A"} value={value} />
       <span>{value}</span>

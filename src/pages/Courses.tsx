@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { LandingNav } from "../components/LandingNav";
 import { Link } from "react-router-dom";
-import { auth } from "../firebase/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import useGetUserData from "../firebase/getters/useGetUserData";
+import { useRecoilState } from "recoil";
+import { userDataAtom } from "../atoms/user-data-atoms";
 
 type CoursesProps = {};
 interface UserData {
@@ -26,15 +25,14 @@ interface UserData {
 }
 
 const Courses: React.FC<CoursesProps> = () => {
-  const [user] = useAuthState(auth);
-  const { userData, loading } = useGetUserData(user?.uid);
+  const [userData] = useRecoilState(userDataAtom)
 
   return (
     <>
       <LandingNav />
-      <div className="max-w-[1400px] mt-10 mx-auto px-4">
+      <div className="max-w-[1220px] mt-10 mx-auto px-4">
         <h1 className="text-center bold text-[42px]">Courses</h1>
-        <ul className="flex gap-8 flex-wrap mt-12">
+        <ul className="flex gap-6 flex-wrap mt-12">
           <Course
             img="/images/first-responders-course-img.jpg"
             userData={userData}
@@ -48,7 +46,6 @@ const Courses: React.FC<CoursesProps> = () => {
             id={"test-course"}
           />
         </ul>
-        <p className="mt-24 text-center text-3xl">More coming soon...</p>
       </div>
     </>
   );
@@ -66,12 +63,12 @@ const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
   return (
     <>
       <div className="py-4 px-6 bg-[#f2f4f5] border border-[#CACADD] rounded-xl">
-        <figure className="max-w-[360px] rounded-lg overflow-hidden border border-[#CACADD]">
+        <figure className="max-w-[330px] rounded-lg overflow-hidden border border-[#CACADD]">
           <img src={img} alt="" />
         </figure>
         <div className="mt-5">
           <p className="semibold text-xl">First Responders Course</p>
-          <p className="mt-3 max-w-[360px]">
+          <p className="mt-3 max-w-[330px]">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam
             officia dolor nobis iusto sapiente hic neque enim repellat
             perferendis libero?
@@ -80,13 +77,13 @@ const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
         <div className="flex justify-between mt-2 items-center">
           {userData ? (
             <Link to={"/courses/test-course"}>
-              <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all">
+              <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all text-sm">
                 Launch Course
               </button>
             </Link>
           ) : (
             <>
-              <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all" onClick={() => setShowLoginMessage(true)}>
+              <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all text-sm" onClick={() => setShowLoginMessage(true)}>
                 Launch Course
               </button>
             </>
