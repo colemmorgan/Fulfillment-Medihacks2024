@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
 import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
-
-const SIMULATE_SECOND_PLAYER = true; // dev only thing
+import { SIMULATE_SECOND_PLAYER } from "../constants/trivia";
 
 const NewGame: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

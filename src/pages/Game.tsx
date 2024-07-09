@@ -2,41 +2,12 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-
-interface Question {
-  id: string;
-  question: string;
-  incorrectAnswers: string[];
-  correctAnswer: string;
-  difficulty: "easy" | "medium" | "hard";
-}
-
-const QUESTIONS: Question[] = [
-  {
-    id: "1",
-    question: "What is 2 + 2?",
-    incorrectAnswers: ["3", "5", "6"],
-    correctAnswer: "4",
-    difficulty: "easy",
-  },
-  {
-    id: "2",
-    question: "What is 7 x 8?",
-    incorrectAnswers: ["54", "62", "58"],
-    correctAnswer: "56",
-    difficulty: "medium",
-  },
-  {
-    id: "3",
-    question: "What is the square root of 144?",
-    incorrectAnswers: ["10", "14", "16"],
-    correctAnswer: "12",
-    difficulty: "hard",
-  },
-];
-
-const SIMULATE_SECOND_PLAYER = true;
-const TIME_LIMIT = 15;
+import {
+  Question,
+  QUESTIONS,
+  SIMULATE_SECOND_PLAYER,
+  TIME_LIMIT,
+} from "../constants/trivia";
 
 const Game: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
