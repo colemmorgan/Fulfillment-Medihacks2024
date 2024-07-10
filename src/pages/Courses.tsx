@@ -30,7 +30,7 @@ const Courses: React.FC<CoursesProps> = () => {
   return (
     <>
       <LandingNav />
-      <div className="max-w-[1220px] mt-10 mx-auto px-4">
+      <div className="max-w-[1220px] mt-16 mx-auto px-4">
         <h1 className="text-center bold text-[42px]">Courses</h1>
         <ul className="flex gap-6 flex-wrap mt-12">
           <Course

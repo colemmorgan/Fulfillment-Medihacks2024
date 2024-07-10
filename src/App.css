@@ -49,3 +49,24 @@ body {
 .box {
   box-shadow: rgba(145, 149, 246,0.3) 0px 5px 14px 0px;
 }
+
+/* card */
+
+.flip-card {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}

@@ -3,12 +3,13 @@
 // import { auth } from "../firebase/firebase";
 import { LandingNav } from "../components/LandingNav";
 import { Link } from "react-router-dom";
+import LandingReadings from "../components/LandingReadings";
 
 export const Home = () => {
   return (
     <>
       <LandingNav />
-      <div className="px-10 mt-16 pb-32">
+      <div className="px-10 mt-16">
         <div className="relative z-20 text-center flex flex-col justify-center">
           <p className="text-4xl mb-5 bold ">Introducing</p>
           <h1 className="text-main text-[116px] font-semibold leading-none black ">
@@ -41,6 +42,45 @@ export const Home = () => {
           </div>
         </div>
       </div>
+      <div className=" bg-black -mt-28 text-white flex pt-52 pb-[450px] relative">
+        <div className="max-w-[1220px] w-full mx-auto">
+          <h2 className="text-5xl semibold text-center">Learn Your Way</h2>
+          <div className="flex mt-16 w-full justify-between">
+            <div className="px-4 flex flex-col max-w-[580px] ">
+              <h4 className="text-3xl mb-6 text-center">
+                Learn at your own pace.
+              </h4>
+              <img
+                src="/images/sample.png"
+                alt=""
+                className="rounded-xl"
+              />
+              <p className=" mt-4 leading-relaxed text-lg mb-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                itaque quisquam sapiente aliquid, iusto corporis nihil vero
+                aliquam consectetur nam.
+              </p>
+              <Link to={"/courses"}><span className="bg-main px-6 py-2.5 rounded-md semibold text-black w-full block text-center">Go to Courses</span></Link>
+            </div>
+            <div className=" px-4 flex flex-col max-w-[580px]">
+              <h4 className="text-3xl mb-6 text-center">Compete against others.</h4>
+              <img
+                src="/images/sample.png"
+                alt=""
+                className=" rounded-xl"
+              />
+              <p className="mt-4 leading-relaxed text-lg mb-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                itaque quisquam sapiente aliquid, iusto corporis nihil vero
+                aliquam consectetur nam.
+              </p>
+              <Link to={"/courses"}><span className="bg-main px-6 py-2.5 rounded-md semibold text-black w-full block text-center">Go to Versus</span></Link>
+            </div>
+          </div>
+          <LandingReadings/>
+        </div>
+      </div>
+      <div className="h-screen"></div>
     </>
   );
 };
