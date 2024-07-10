@@ -18,7 +18,7 @@ const CardFlip: React.FC<CardFlipProps> = ({question, answer}) => {
   };
   return (
     <div
-      className="flip-card w-[500px] h-72 rounded-md"
+      className="flip-card w-[500px] h-72 rounded-md cursor-pointer"
       onClick={handleFlip}
     >
       <motion.div

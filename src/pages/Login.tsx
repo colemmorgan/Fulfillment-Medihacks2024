@@ -8,7 +8,7 @@ import { PiHandWavingBold } from "react-icons/pi";
 export const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [signInWithEmailAndPassword, _, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
   const [inputs, setInputs] = useState({ email: "", password: "" });
@@ -26,7 +26,7 @@ export const Login: React.FC = () => {
         theme: "light",
       });
     try {
-      const user = signInWithEmailAndPassword(inputs.email, inputs.password);
+      const user = await signInWithEmailAndPassword(inputs.email, inputs.password);
       if (!user) return;
       toast.success("Successfully logged in!", {
         position: "top-center",

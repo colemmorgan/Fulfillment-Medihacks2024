@@ -15,6 +15,7 @@ import useGetUserData from './firebase/getters/useGetUserData';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataAtom, userDataLoading } from './atoms/user-data-atoms';
+import NotepackMaker from './pages/NotepackMaker';
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/courses' element={<Courses/>}/>
           <Route path='/courses/:courseId' element={<Quiz/>}/>
+          <Route path='/notepack-maker' element={<NotepackMaker/>}/>
         </Routes>
       </Router>
     </>
