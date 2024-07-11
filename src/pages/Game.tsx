@@ -253,9 +253,19 @@ const Game: React.FC = () => {
   }
 
   if (gameOver) {
-    const winner = Object.entries(scores).reduce((a, b) =>
-      a[1] > b[1] ? a : b
-    )[0];
+    let winner;
+
+    const p1 = "Player 1";
+    const p2 = "Player 2";
+
+    if (scores[p1] === scores[p2]) {
+      winner = null;
+    } else {
+      winner = Object.entries(scores).reduce((a, b) =>
+        a[1] > b[1] ? a : b
+      )[0];
+    }
+
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-8">Game Over</h1>
@@ -265,7 +275,9 @@ const Game: React.FC = () => {
             {player}: {score}
           </p>
         ))}
-        <p className="text-3xl mt-4 mb-6">Winner: {winner}</p>
+        <p className="text-3xl mt-4 mb-6">
+          Winner: {winner ? winner : "None, it's a draw"}
+        </p>
         <button
           onClick={() => navigate("/trivia")}
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
