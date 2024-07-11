@@ -74,38 +74,41 @@ const Game: React.FC = () => {
     }
   };
 
-  const handleSubmitAnswer = useCallback(async () => {
-    if (
-      !gameData ||
-      !currentQuestion ||
-      !gameId ||
-      playerAnswered ||
-      playerNumber === null ||
-      selectedAnswer === null
-    )
-      return;
+  const handleSubmitAnswer = useCallback(
+    async (answer: string | null = selectedAnswer) => {
+      if (
+        !gameData ||
+        !currentQuestion ||
+        !gameId ||
+        playerAnswered ||
+        playerNumber === null
+      )
+        return;
 
-    setPlayerAnswered(true);
-    setSubmittedAnswer(selectedAnswer);
+      setPlayerAnswered(true);
+      setSubmittedAnswer(answer);
 
-    const gameRef = doc(db, "games", gameId);
+      const gameRef = doc(db, "games", gameId);
 
-    try {
-      await updateDoc(gameRef, {
-        [`answers.Player ${playerNumber}`]: selectedAnswer,
-      });
-      console.log(`Player ${playerNumber} answer submitted:`, selectedAnswer);
-    } catch (error) {
-      console.error("Error updating game data:", error);
-    }
-  }, [
-    gameData,
-    currentQuestion,
-    gameId,
-    playerAnswered,
-    playerNumber,
-    selectedAnswer,
-  ]);
+      try {
+        await updateDoc(gameRef, {
+          [`answers.Player ${playerNumber}`]: answer,
+          [`timeouts.Player ${playerNumber}`]: answer === null,
+        });
+        console.log(`Player ${playerNumber} answer submitted:`, answer);
+      } catch (error) {
+        console.error("Error updating game data:", error);
+      }
+    },
+    [
+      gameData,
+      currentQuestion,
+      gameId,
+      playerAnswered,
+      playerNumber,
+      selectedAnswer,
+    ]
+  );
 
   // The useEffect hook that listens for game updates
   useEffect(() => {
@@ -151,8 +154,11 @@ const Game: React.FC = () => {
             }
 
             // update answer status for both players
-            const player1Answered = !!data.answers?.["Player 1"];
-            const player2Answered = !!data.answers?.["Player 2"];
+            const player1Answered =
+              !!data.answers?.["Player 1"] || data.timeouts?.["Player 1"];
+            const player2Answered =
+              !!data.answers?.["Player 2"] || data.timeouts?.["Player 2"];
+
             setPlayer1Answered(player1Answered);
             setPlayer2Answered(player2Answered);
 
@@ -162,11 +168,11 @@ const Game: React.FC = () => {
             // check if both players have answered
             if (player1Answered && player2Answered) {
               console.log(
-                "Both players answered. Showing answers and preparing to move to next question."
+                "Both players have answered or timed out. Showing answers and preparing to move to next question."
               );
               setShowAnswers(true);
 
-              // then calculate and update scores
+              // Calculate and update scores
               const newScores = { ...data.scores };
               ["Player 1", "Player 2"].forEach((player) => {
                 const playerAnswer = data.answers[player];
@@ -182,7 +188,7 @@ const Game: React.FC = () => {
                 }
               });
 
-              // update scores and move to next question
+              // Update scores and move to next question
               setTimeout(() => {
                 setShowAnswers(false);
                 const nextQuestionIndex = data.currentQuestionIndex + 1;
@@ -190,6 +196,7 @@ const Game: React.FC = () => {
                 updateDoc(doc(db, "games", gameId), {
                   currentQuestionIndex: nextQuestionIndex,
                   answers: {},
+                  timeouts: {},
                   timeStarted: Date.now(),
                   scores: newScores,
                 })
@@ -207,7 +214,7 @@ const Game: React.FC = () => {
                 if (nextQuestionIndex >= QUESTIONS.length) {
                   updateDoc(doc(db, "games", gameId), { status: "completed" });
                 }
-              }, 4000);
+              }, 2000); // 2 second delay before moving to next question
             }
 
             setScores(data.scores || {});
@@ -236,7 +243,7 @@ const Game: React.FC = () => {
         1000
       );
     } else if (gameStarted && !gameOver && timeLeft === 0 && !playerAnswered) {
-      handleSubmitAnswer(); // auto submit null answer when time runs out
+      handleSubmitAnswer(null); // Automatically submit null answer when time runs out
     }
     return () => clearTimeout(timer);
   }, [timeLeft, gameOver, playerAnswered, handleSubmitAnswer, gameStarted]);
@@ -313,7 +320,7 @@ const Game: React.FC = () => {
           </div>
           {!playerAnswered && (
             <button
-              onClick={handleSubmitAnswer}
+              onClick={() => handleSubmitAnswer()}
               disabled={selectedAnswer === null}
               className={`mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${
                 selectedAnswer === null ? "opacity-50 cursor-not-allowed" : ""
