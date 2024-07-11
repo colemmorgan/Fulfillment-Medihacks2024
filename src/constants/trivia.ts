@@ -1,4 +1,4 @@
-export const SIMULATE_SECOND_PLAYER = true;
+export const SIMULATE_SECOND_PLAYER = false;
 export const TIME_LIMIT = 15;
 
 export enum GamePoints {

@@ -47,26 +47,32 @@ const NewGame: React.FC = () => {
 
     const gameRef = doc(db, "games", gameId);
 
-    if (SIMULATE_SECOND_PLAYER) {
-      // this simulates both players joining at once (dev only)
-      await updateDoc(gameRef, {
-        players: ["player1", "player2"],
-        status: "ready",
-        currentQuestionIndex: 0,
-        scores: { player1: 0, player2: 0 },
-      });
+    let playerNumber;
+    if (gameData.players.length === 0) {
+      playerNumber = 1;
+    } else if (gameData.players.length === 1) {
+      playerNumber = 2;
     } else {
-      // normal flow for when we have a real second player
-      // TODO: haven't tested this. might work, maybe?
-      const updatedPlayers = [...gameData.players, "player"];
+      console.error("Game is full");
+      return;
+    }
+
+    const playerId = `Player ${playerNumber}`;
+    localStorage.setItem("playerId", playerId);
+
+    const updatedPlayers = [...(gameData.players || []), playerId];
+    await updateDoc(gameRef, {
+      players: updatedPlayers,
+      status: updatedPlayers.length === 2 ? "ready" : "waiting",
+      [`scores.${playerId}`]: 0, // Initialize the score for this player
+    });
+
+    if (updatedPlayers.length === 2) {
+      // If this is the second player, initialize the game
       await updateDoc(gameRef, {
-        players: updatedPlayers,
-        status: updatedPlayers.length === 2 ? "ready" : "waiting",
         currentQuestionIndex: 0,
-        scores: {
-          ...gameData.scores,
-          [updatedPlayers.length === 1 ? "player1" : "player2"]: 0,
-        },
+        answers: {},
+        timeStarted: Date.now(),
       });
     }
 
