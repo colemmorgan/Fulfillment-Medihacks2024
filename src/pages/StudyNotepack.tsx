@@ -92,7 +92,7 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
   return (
     <>
       <LandingNav />
-      <div className="max-w-[1090px] mx-auto mt-12 pb-20">
+      <div className="max-w-[1090px] mx-auto mt-12 pb-20 min-h-screen">
         <h3 className="text-center text-3xl semibold">{notepack.title}</h3>
         <div className="w-full flex justify-center max-w-[700px] mx-auto overflow-hidden pt-12 pb-12 overflow-y-hidden h-[448px]">
           <AnimatePresence initial={false} custom={direction}>
@@ -132,8 +132,18 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
         <div className="mt-20">
             <p className="text-center text-3xl">Keep Studying</p>
             <ul className="flex gap-5 flex-wrap mt-8">
-                {notepacks?.slice(0,3).map((pack) => (
-                    <NotepackLink notepack={pack} key={pack.id}/>
+                {notepacks?.slice(0,3).map((pack, index) => (
+                   <motion.li
+                   key={pack.id}
+                   initial={{ opacity: 0, y: 30 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{
+                     duration: 0.6,
+                     ease: "easeOut",
+                     delay: 0.1 * index,
+                   }}>
+                    <NotepackLink notepack={pack} />
+                    </motion.li>
                 ))}
             </ul>
         </div>

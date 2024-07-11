@@ -31,10 +31,10 @@ const CardFlip: React.FC<CardFlipProps> = ({question, answer, height, width}) =>
         transition={{ duration: 0.1,  ease: "linear", }}
         onAnimationComplete={() => setIsAnimating(false)}
       >
-        <div className="flip-card-front w-full h-full bg-white rounded-md flex justify-center items-center text-2xl px-8 text-center overflow-y-auto">
+        <div className="flip-card-front w-full h-full bg-white rounded-md flex justify-center items-center text-2xl px-8 text-center overflow-y-auto leading-relaxed">
             {question}
         </div>
-        <div className="flip-card-back w-full h-full bg-white rounded-md flex justify-center items-center text-xl px-8 overflow-y-auto">
+        <div className="flip-card-back w-full h-full bg-white rounded-md flex justify-center items-center text-xl px-8 overflow-y-auto leading-relaxed">
             {answer}
         </div>
       </motion.div>

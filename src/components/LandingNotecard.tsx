@@ -3,18 +3,20 @@ import React from "react";
 
 import CardFlip from "./ui/CardFlip";
 import { Link } from "react-router-dom";
+import FadeUp from "./framer-components/FadeUp";
 
 type LandingNotecardProps = {};
 
 const LandingNotecard: React.FC<LandingNotecardProps> = () => {
   return (
-    <div className="bg-offWhite p-6 pt-0 border border-borderColor max-w-[850px] mx-auto rounded-2xl absolute w-full left-1/2 -translate-x-1/2 -bottom-[325px] z-40 ove">
+    <FadeUp >
+      <div className="bg-offWhite p-6 pt-0 border border-borderColor max-w-[850px] w-full mx-auto rounded-2xl mt-32 ">
       <div className="w-full h-7 flex justify-start items-center space-x-2 px-3 ">
         <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
       </div>
-      <div className="w-full  border border-borderColor rounded-xl py-8  text-black">
+      <div className="max-w-[802px] w-[802px] border border-borderColor rounded-xl py-8  text-black">
         <div className="pb-6 border-b border-borderColor w-full text-center">
           <p className="text-4xl semibold">Still not satisfied?</p>
           <p className="mt-2 text-xl">Create notecards for others to study!</p>
@@ -26,6 +28,7 @@ const LandingNotecard: React.FC<LandingNotecardProps> = () => {
         </div>
       </div>
     </div>
+    </FadeUp>
   );
 };
 
