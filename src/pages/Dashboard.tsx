@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Account from '../components/dashboard-components/Account';
 import Activity from '../components/dashboard-components/Activity';
 import DailyActivites from '../components/dashboard-components/DailyActivites';
@@ -10,6 +10,10 @@ import WeeklyProblemCount from '../components/dashboard-components/WeeklyProblem
 import { useRecoilState } from 'recoil';
 import { userDataAtom } from '../atoms/user-data-atoms';
 import CourseCompletion from '../components/dashboard-components/CourseCompletion';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/firebase';
+import { useNavigate } from 'react-router-dom';
+import DashboardAlt from '../components/DashboardAlt';
 
 type DashboardProps = {
     
@@ -18,13 +22,24 @@ type DashboardProps = {
 const Dashboard:React.FC<DashboardProps> = () => {
 
     const [userData] = useRecoilState(userDataAtom)
+    const [user,loading] = useAuthState(auth)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!user && !loading) {
+            navigate("/login")
+        }
+    },[user, loading])
+    if (loading) {
+        return <></>;
+      }
     
     return (
         <div className="bg-[#f2f4f5] min-h-screen pb-20">
             <LandingNav/>
             <div className="pt-6 max-w-[1324px] mx-auto px-6">
             <h1 className='text-center semibold text-4xl'>Dashboard</h1>
-            <div className="">
+            {/* <div className="">
                 <div className="grid grid-cols-12 gap-2 mt-10">
                     <Account/>
                     <Activity/>
@@ -44,7 +59,12 @@ const Dashboard:React.FC<DashboardProps> = () => {
                         <button className='mt-7 bg-opaque py-1.5 w-full rounded-md text-sm'>Launch Gamemode</button>
                     </div>
                 </div>
-            </div>
+            </div> */}
+            <DashboardAlt/>
+
+
+
+            
         </div>
         </div>
     )

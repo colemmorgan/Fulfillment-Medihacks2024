@@ -3,6 +3,7 @@ import { LandingNav } from "../components/LandingNav";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userDataAtom } from "../atoms/user-data-atoms";
+import StaggeredFadeUp from "../components/framer-components/StaggeredFadeUp";
 
 type CoursesProps = {};
 interface UserData {
@@ -25,7 +26,7 @@ interface UserData {
 }
 
 const Courses: React.FC<CoursesProps> = () => {
-  const [userData] = useRecoilState(userDataAtom)
+  const [userData] = useRecoilState(userDataAtom);
 
   return (
     <>
@@ -33,18 +34,27 @@ const Courses: React.FC<CoursesProps> = () => {
       <div className="max-w-[1220px] mt-16 mx-auto px-4">
         <h1 className="text-center bold text-[42px]">Courses</h1>
         <ul className="flex gap-6 flex-wrap mt-12">
-          <Course
-            img="/images/first-responders-course-img.jpg"
-            userData={userData}
-            id={"test-course"}
-          />
-          <Course img="/images/wound-care-course-img.jpg" userData={userData}
-          id={"test-course"} />
-          <Course
-            img="/images/mental-health-course-img.jpg"
-            userData={userData}
-            id={"test-course"}
-          />
+          <StaggeredFadeUp index={0}>
+            <Course
+              img="/images/first-responders-course-img.jpg"
+              userData={userData}
+              id={"test-course"}
+            />
+          </StaggeredFadeUp>
+          <StaggeredFadeUp index={1}>
+            <Course
+              img="/images/wound-care-course-img.jpg"
+              userData={userData}
+              id={"test-course"}
+            />
+          </StaggeredFadeUp>
+          <StaggeredFadeUp index={2}>
+            <Course
+              img="/images/mental-health-course-img.jpg"
+              userData={userData}
+              id={"test-course"}
+            />
+          </StaggeredFadeUp>
         </ul>
       </div>
     </>
@@ -55,7 +65,7 @@ export default Courses;
 interface CourseProps {
   img: string;
   userData: UserData | null;
-  id: string
+  id: string;
 }
 
 const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
@@ -83,7 +93,10 @@ const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
             </Link>
           ) : (
             <>
-              <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all text-sm" onClick={() => setShowLoginMessage(true)}>
+              <button
+                className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all text-sm"
+                onClick={() => setShowLoginMessage(true)}
+              >
                 Launch Course
               </button>
             </>
@@ -95,10 +108,21 @@ const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
         <div className="fixed inset-0 flex items-center justify-center z-20 backdrop-blur-md bg-light bg-opacity-55">
           <div className="w-[450px]  bg-[#f8f8f8] border border-borderColor rounded-xl px-6 py-10 flex flex-col items-center">
             <p className="text-5xl">Wait!</p>
-            <p className="text-xl mt-4">You must be signed in to access courses.</p>
+            <p className="text-xl mt-4">
+              You must be signed in to access courses.
+            </p>
             <div className="flex gap-4 mt-6">
-              <button className="bg-opaque w-32 py-2.5 rounded-md" onClick={() => setShowLoginMessage(false)}>Go back</button>
-              <Link to={"/login"}><button className=" bg-black text-[#f8f8f8] w-32 py-2.5 rounded-md">Login</button></Link>
+              <button
+                className="bg-opaque w-32 py-2.5 rounded-md"
+                onClick={() => setShowLoginMessage(false)}
+              >
+                Go back
+              </button>
+              <Link to={"/login"}>
+                <button className=" bg-black text-[#f8f8f8] w-32 py-2.5 rounded-md">
+                  Login
+                </button>
+              </Link>
             </div>
           </div>
         </div>

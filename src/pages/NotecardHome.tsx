@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getNotepacks } from "../firebase/getters/getNotepacks";
 import NotepackLink from "../components/ui/NotepackLink";
+import StaggeredFadeUp from "../components/framer-components/StaggeredFadeUp";
 
 type NotecardHomeProps = {};
 
@@ -51,18 +52,9 @@ const NotecardHome: React.FC<NotecardHomeProps> = () => {
         </p>
         <ul className="mt-10 flex gap-4 flex-wrap max-w-[1098px] mx-auto">
           {notepacks?.map((notepack, index) => (
-            <motion.li
-              key={notepack.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                ease: "easeOut",
-                delay: 0.1 * index,
-              }}
-            >
+            <StaggeredFadeUp index={index} key={index}>
               <NotepackLink notepack={notepack} />
-            </motion.li>
+            </StaggeredFadeUp>
           ))}
         </ul>
       </div>

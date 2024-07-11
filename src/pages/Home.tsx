@@ -27,6 +27,7 @@ export const Home = () => {
               A Medical Education Game
             </p>
           </Reveal>
+          <FadeUp>
           <div className="mt-5 flex justify-center gap-4  pl-2">
             <Link to={"/courses"}>
               <button className="semibold text-lg bg-opaque pt-2 pb-1.5 w-36 rounded-full">
@@ -39,6 +40,7 @@ export const Home = () => {
               </button>
             </Link>
           </div>
+          </FadeUp>
           <HeroImg />
         </div>
       </div>
