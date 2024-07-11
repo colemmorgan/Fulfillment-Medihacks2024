@@ -3,7 +3,7 @@
 // import { auth } from "../firebase/firebase";
 import { LandingNav } from "../components/LandingNav";
 import { Link } from "react-router-dom";
-import LandingReadings from "../components/LandingReadings";
+import LandingReadings from "../components/LandingNotecard";
 
 export const Home = () => {
   return (
@@ -42,7 +42,7 @@ export const Home = () => {
           </div>
         </div>
       </div>
-      <div className=" bg-black -mt-28 text-white flex pt-52 pb-[450px] relative">
+      <div className=" bg-black -mt-28 text-white flex pt-52 pb-[485px] relative">
         <div className="max-w-[1220px] w-full mx-auto">
           <h2 className="text-5xl semibold text-center">Learn Your Way</h2>
           <div className="flex mt-16 w-full justify-between">

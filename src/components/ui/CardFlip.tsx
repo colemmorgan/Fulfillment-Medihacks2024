@@ -25,7 +25,7 @@ const CardFlip: React.FC<CardFlipProps> = ({question, answer}) => {
         className="flip-card-inner w-full h-full border border-borderColor rounded-md"
         initial={false}
         animate={{ rotateY: isFlipped ? 180 : 360 }}
-        transition={{ duration: 0.3,  ease: "linear", }}
+        transition={{ duration: 0.2,  ease: "linear", }}
         onAnimationComplete={() => setIsAnimating(false)}
       >
         <div className="flip-card-front w-full h-full bg-white rounded-md flex justify-center items-center text-2xl px-6 text-center">

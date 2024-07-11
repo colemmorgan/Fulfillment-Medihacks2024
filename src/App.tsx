@@ -16,6 +16,8 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataAtom, userDataLoading } from './atoms/user-data-atoms';
 import NotepackMaker from './pages/NotepackMaker';
+import NotecardHome from './pages/NotecardHome';
+import StudyNotepack from './pages/StudyNotepack';
 
 
 function App() {
@@ -27,12 +29,10 @@ function App() {
   const [__, setUserDataLoading] = useRecoilState(userDataLoading)
 
   useEffect(() => {
-    console.log("fired")
     setUserData(userData)
   },[userData])
 
   useEffect(() => {
-    console.log("fired")
     setUserDataLoading(loading)
   },[loading])
 
@@ -47,7 +47,9 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/courses' element={<Courses/>}/>
           <Route path='/courses/:courseId' element={<Quiz/>}/>
+          <Route path='/notecards' element={<NotecardHome/>}/>
           <Route path='/notepack-maker' element={<NotepackMaker/>}/>
+          <Route path='/notepack/:id' element={<StudyNotepack/>}/>
         </Routes>
       </Router>
     </>

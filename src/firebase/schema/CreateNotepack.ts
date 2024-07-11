@@ -1,7 +1,5 @@
-// src/utils/firebaseUtils.ts
-
 import { collection, addDoc } from "firebase/firestore";
-import { firestore } from "../firebase"; // adjust this import path as needed
+import { firestore } from "../firebase"; 
 import { toast } from "react-toastify";
 
 type Notecard = {
@@ -9,7 +7,7 @@ type Notecard = {
   answer: string;
 };
 
-export const createNotepack = async (cards: Notecard[], title: string) => {
+export const createNotepack = async (cards: Notecard[], title: string, firstName: string, lastName: string) => {
   if (cards.length === 0) {
     toast.error("Please add at least one notecard before publishing.", {
       position: "top-center",
@@ -26,6 +24,10 @@ export const createNotepack = async (cards: Notecard[], title: string) => {
         question: card.question,
         answer: card.answer
       })),
+      author: {
+        firstName: firstName,
+        lastName: lastName
+      },
       createdAt: new Date()
     };
 
@@ -37,7 +39,6 @@ export const createNotepack = async (cards: Notecard[], title: string) => {
       theme: "light",
     });
 
-    console.log("Notepack saved with ID: ", docRef.id);
     
     return docRef.id; 
     

@@ -2,12 +2,13 @@
 import React from "react";
 
 import CardFlip from "./ui/CardFlip";
+import { Link } from "react-router-dom";
 
-type LandingReadingsProps = {};
+type LandingNotecardProps = {};
 
-const LandingReadings: React.FC<LandingReadingsProps> = () => {
+const LandingNotecard: React.FC<LandingNotecardProps> = () => {
   return (
-    <div className="bg-offWhite p-6 pt-0 border border-borderColor max-w-[850px] mx-auto rounded-2xl absolute w-full left-1/2 -translate-x-1/2 -bottom-[350px] z-40">
+    <div className="bg-offWhite p-6 pt-0 border border-borderColor max-w-[850px] mx-auto rounded-2xl absolute w-full left-1/2 -translate-x-1/2 -bottom-[325px] z-40">
       <div className="w-full h-7 flex justify-start items-center space-x-2 px-3 ">
         <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
@@ -21,11 +22,11 @@ const LandingReadings: React.FC<LandingReadingsProps> = () => {
         <div className="mt-6 flex flex-col items-center">
           <p className="text-xl mb-8">Click to flip card!</p>
           <CardFlip question="How long do you have to be in cold water to get hypothermia?"answer="Hypothermia usually occurs within 20-30 minutes in cold water." />
-          <span className="mt-8 bg-main py-2 max-w-[475px] w-full text-center rounded-md">Go to notecards</span>
+          <Link to={"/notecards"} className="max-w-[500px] w-full"><p className="mt-8 bg-main py-2  w-full text-center rounded-md">Go to notecards</p></Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default LandingReadings;
+export default LandingNotecard;
