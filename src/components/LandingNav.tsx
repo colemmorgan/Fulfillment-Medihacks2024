@@ -30,7 +30,7 @@ export const LandingNav = () => {
           <ul className=" flex gap-5 items-center text-[15px]">
             <Link to={"/"}><li>Home</li></Link>
             <Link to={"/dashboard"}><li>Dashboard</li></Link>
-            <Link to={"/notecards"}><li>Notecards</li></Link>
+            <Link to={"/notepacks"}><li>Notecards</li></Link>
             <li>Versus</li>
             <li>Courses</li>
             {user ? (

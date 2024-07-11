@@ -47,9 +47,9 @@ function App() {
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/courses' element={<Courses/>}/>
           <Route path='/courses/:courseId' element={<Quiz/>}/>
-          <Route path='/notecards' element={<NotecardHome/>}/>
+          <Route path='/notepacks' element={<NotecardHome/>}/>
           <Route path='/notepack-maker' element={<NotepackMaker/>}/>
-          <Route path='/notepack/:id' element={<StudyNotepack/>}/>
+          <Route path='/notepacks/:id' element={<StudyNotepack/>}/>
         </Routes>
       </Router>
     </>

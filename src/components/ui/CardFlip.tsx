@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 type CardFlipProps = {
     question: string,
     answer: string,
+    width: number,
+    height: number,
 };
 
-const CardFlip: React.FC<CardFlipProps> = ({question, answer}) => {
+const CardFlip: React.FC<CardFlipProps> = ({question, answer, height, width}) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -18,20 +20,21 @@ const CardFlip: React.FC<CardFlipProps> = ({question, answer}) => {
   };
   return (
     <div
-      className="flip-card w-[500px] h-72 rounded-md cursor-pointer"
+      className="flip-card rounded-md cursor-pointer w-full"
+      style={{height: `${height}px`, maxWidth: `${width}px`}}
       onClick={handleFlip}
     >
       <motion.div
         className="flip-card-inner w-full h-full border border-borderColor rounded-md"
         initial={false}
         animate={{ rotateY: isFlipped ? 180 : 360 }}
-        transition={{ duration: 0.2,  ease: "linear", }}
+        transition={{ duration: 0.1,  ease: "linear", }}
         onAnimationComplete={() => setIsAnimating(false)}
       >
-        <div className="flip-card-front w-full h-full bg-white rounded-md flex justify-center items-center text-2xl px-6 text-center">
+        <div className="flip-card-front w-full h-full bg-white rounded-md flex justify-center items-center text-2xl px-8 text-center overflow-y-auto">
             {question}
         </div>
-        <div className="flip-card-back w-full h-full bg-white rounded-md flex justify-center items-center text-lg px-6">
+        <div className="flip-card-back w-full h-full bg-white rounded-md flex justify-center items-center text-xl px-8 overflow-y-auto">
             {answer}
         </div>
       </motion.div>

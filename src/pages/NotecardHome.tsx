@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { LandingNav } from "../components/LandingNav";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getNotepacks } from "../firebase/getters/getNotepacks";
+import NotepackLink from "../components/ui/NotepackLink";
 
 type NotecardHomeProps = {};
 
@@ -36,9 +37,6 @@ const NotecardHome: React.FC<NotecardHomeProps> = () => {
     fetchNotepacks();
   }, []);
 
-  useEffect(() => {
-    console.log(notepacks)
-  },[notepacks])
   return (
     <>
       <LandingNav />
@@ -53,7 +51,7 @@ const NotecardHome: React.FC<NotecardHomeProps> = () => {
         </p>
         <ul className="mt-10 flex gap-4 flex-wrap max-w-[1098px] mx-auto">
           {notepacks?.map((notepack) => (
-            <NotepackLink notepack={notepack}/>
+            <NotepackLink notepack={notepack} key={notepack.id}/>
           ))}
         </ul>
       </div>
@@ -62,28 +60,3 @@ const NotecardHome: React.FC<NotecardHomeProps> = () => {
 };
 export default NotecardHome;
 
-type NotepackLinkProps = {
-    notepack: Notepack
-};
-
-const NotepackLink: React.FC<NotepackLinkProps> = ({notepack}) => {
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(`/notepacks/${notepack.id}`, { state: { notepack } });
-      };
-  return (
-    <li
-      className="p-5 pb-4 border border-borderColor max-w-[350px] h-48 w-full rounded-xl flex flex-col justify-between cursor-pointer
-     hover:border-opaque transition-all notepack-link"
-     onClick={handleClick}
-    >
-      <div className="">
-        <p className="text-lg semibold mb-2">{notepack.title}</p>
-        <span className=" bg-opaque py-1.5 px-3 text-xs rounded-full">
-          {notepack.cards.length} cards
-        </span>
-      </div>
-      <p>Author: {notepack.author.firstName} {notepack.author.lastName}</p>
-    </li>
-  );
-};
