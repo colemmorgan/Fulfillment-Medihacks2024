@@ -57,6 +57,9 @@ const Game: React.FC = () => {
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+
   const shuffledAnswers = useMemo(() => {
     if (!currentQuestion) return [];
     return [
@@ -83,6 +86,7 @@ const Game: React.FC = () => {
       return;
 
     setPlayerAnswered(true);
+    setSubmittedAnswer(selectedAnswer);
 
     const gameRef = doc(db, "games", gameId);
 
@@ -158,8 +162,9 @@ const Game: React.FC = () => {
             // check if both players have answered
             if (player1Answered && player2Answered) {
               console.log(
-                "Both players answered. Calculating scores and preparing to move to next question."
+                "Both players answered. Showing answers and preparing to move to next question."
               );
+              setShowAnswers(true);
 
               // then calculate and update scores
               const newScores = { ...data.scores };
@@ -179,6 +184,7 @@ const Game: React.FC = () => {
 
               // update scores and move to next question
               setTimeout(() => {
+                setShowAnswers(false);
                 const nextQuestionIndex = data.currentQuestionIndex + 1;
                 console.log("Moving to next question:", nextQuestionIndex);
                 updateDoc(doc(db, "games", gameId), {
@@ -197,11 +203,11 @@ const Game: React.FC = () => {
                     );
                   });
 
-                // check if the game is over
+                // Check if the game is over
                 if (nextQuestionIndex >= QUESTIONS.length) {
                   updateDoc(doc(db, "games", gameId), { status: "completed" });
                 }
-              }, 2000); // 2 second delay before moving to next question (can be updated later)
+              }, 4000);
             }
 
             setScores(data.scores || {});
@@ -282,9 +288,24 @@ const Game: React.FC = () => {
                 key={index}
                 onClick={() => handleSelectAnswer(answer)}
                 disabled={playerAnswered}
-                className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ${
-                  playerAnswered ? "opacity-50 cursor-not-allowed" : ""
-                } ${selectedAnswer === answer ? "ring-4 ring-yellow-500" : ""}`}
+                className={`
+        font-bold py-2 px-4 rounded
+        ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
+        ${
+          !showAnswers && selectedAnswer === answer
+            ? "ring-2 ring-yellow-500"
+            : ""
+        }
+        ${
+          showAnswers
+            ? answer === currentQuestion.correctAnswer
+              ? "bg-green-500 text-white"
+              : answer === submittedAnswer
+              ? "bg-red-500 text-white ring-2 ring-yellow-500"
+              : "bg-red-500 text-white"
+            : "bg-blue-500 hover:bg-blue-600 text-white"
+        }
+      `}
               >
                 {answer}
               </button>
@@ -302,9 +323,9 @@ const Game: React.FC = () => {
             </button>
           )}
           {playerAnswered ? (
-            player1Answered && player2Answered ? (
+            showAnswers ? (
               <p className="mt-4">
-                Both players answered. Moving to next question...
+                Answers revealed. Moving to next question...
               </p>
             ) : (
               <p className="mt-4">Waiting for other player...</p>
