@@ -37,7 +37,7 @@ const Dashboard:React.FC<DashboardProps> = () => {
     return (
         <div className="bg-[#f2f4f5] min-h-screen pb-20">
             <LandingNav/>
-            <div className="pt-6 max-w-[1324px] mx-auto px-6">
+            <div className="pt-8 max-w-[1324px] mx-auto px-6">
             <h1 className='text-center semibold text-4xl'>Dashboard</h1>
             {/* <div className="">
                 <div className="grid grid-cols-12 gap-2 mt-10">

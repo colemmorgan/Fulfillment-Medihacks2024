@@ -33,7 +33,7 @@ export const Login: React.FC = () => {
         autoClose: 3000,
         theme: "light",
       });
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       toast.error(error.message, {
         position: "top-center",
