@@ -64,7 +64,7 @@ const NewGame: React.FC = () => {
     await updateDoc(gameRef, {
       players: updatedPlayers,
       status: updatedPlayers.length === 2 ? "ready" : "waiting",
-      [`scores.${playerId}`]: 0, // Initialize the score for this player
+      [`scores.${playerId}`]: 0,
     });
 
     if (updatedPlayers.length === 2) {
@@ -72,7 +72,8 @@ const NewGame: React.FC = () => {
       await updateDoc(gameRef, {
         currentQuestionIndex: 0,
         answers: {},
-        timeStarted: Date.now(),
+        timeStarted: null, // Set timeStarted to null initially
+        gameStartTime: Date.now(), // Add a gameStartTime field
       });
     }
 

@@ -140,6 +140,13 @@ const Game: React.FC = () => {
 
           if (data.players.length === 2 && !gameStarted) {
             setGameStarted(true);
+            // Start the timer for the first question
+            if (data.timeStarted === null) {
+              const gameRef = doc(db, "games", gameId);
+              updateDoc(gameRef, {
+                timeStarted: Date.now(),
+              });
+            }
           }
 
           if (data.currentQuestionIndex < QUESTIONS.length) {
@@ -153,20 +160,22 @@ const Game: React.FC = () => {
               setTimeLeft(TIME_LIMIT);
             }
 
-            // update answer status for both players
+            // Update answer status for both players
             const player1Answered =
               !!data.answers?.["Player 1"] || data.timeouts?.["Player 1"];
             const player2Answered =
               !!data.answers?.["Player 2"] || data.timeouts?.["Player 2"];
-
             setPlayer1Answered(player1Answered);
             setPlayer2Answered(player2Answered);
 
-            // update playerAnswered state
-            setPlayerAnswered(!!data.answers?.[`Player ${playerNumber}`]);
+            // Update playerAnswered state
+            setPlayerAnswered(
+              !!data.answers?.[`Player ${playerNumber}`] ||
+                data.timeouts?.[`Player ${playerNumber}`]
+            );
 
             // check if both players have answered
-            if (player1Answered && player2Answered) {
+            if (player1Answered && player2Answered && !data.scoresUpdated) {
               console.log(
                 "Both players have answered or timed out. Showing answers and preparing to move to next question."
               );
@@ -188,31 +197,39 @@ const Game: React.FC = () => {
                 }
               });
 
+              // Update scores in the database
+              const gameRef = doc(db, "games", gameId);
+              updateDoc(gameRef, {
+                scores: newScores,
+                scoresUpdated: true,
+              });
+
               // Update scores and move to next question
               setTimeout(() => {
                 setShowAnswers(false);
                 const nextQuestionIndex = data.currentQuestionIndex + 1;
-                console.log("Moving to next question:", nextQuestionIndex);
-                updateDoc(doc(db, "games", gameId), {
+                updateDoc(gameRef, {
                   currentQuestionIndex: nextQuestionIndex,
                   answers: {},
                   timeouts: {},
-                  timeStarted: Date.now(),
-                  scores: newScores,
+                  timeStarted: null,
+                  showAnswers: false,
+                  scoresUpdated: false, // Reset the flag for the next question
                 })
                   .then(() => {
-                    console.log("Database updated for next question");
+                    console.log("Moving to next question:", nextQuestionIndex);
+                    return updateDoc(gameRef, { timeStarted: Date.now() });
                   })
                   .catch((error) => {
                     console.error(
-                      "Error updating database for next question:",
+                      "Error updating game for next question:",
                       error
                     );
                   });
 
                 // Check if the game is over
                 if (nextQuestionIndex >= QUESTIONS.length) {
-                  updateDoc(doc(db, "games", gameId), { status: "completed" });
+                  updateDoc(gameRef, { status: "completed" });
                 }
               }, 2000); // 2 second delay before moving to next question
             }
@@ -221,10 +238,11 @@ const Game: React.FC = () => {
           } else {
             setGameOver(true);
           }
-        } else {
-          console.log("Game document does not exist");
-          navigate("/trivia");
         }
+        // } else {
+        //   console.log("Game document does not exist");
+        //   navigate("/trivia");
+        // }
       },
       (error) => {
         console.error("Error fetching game data:", error);
@@ -237,16 +255,35 @@ const Game: React.FC = () => {
   // timer
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (gameStarted && !gameOver && timeLeft > 0 && !playerAnswered) {
+    if (
+      gameStarted &&
+      !gameOver &&
+      timeLeft > 0 &&
+      !playerAnswered &&
+      gameData?.timeStarted
+    ) {
       timer = setTimeout(
         () => setTimeLeft((prev) => Math.max(0, prev - 1)),
         1000
       );
-    } else if (gameStarted && !gameOver && timeLeft === 0 && !playerAnswered) {
+    } else if (
+      gameStarted &&
+      !gameOver &&
+      timeLeft === 0 &&
+      !playerAnswered &&
+      gameData?.timeStarted
+    ) {
       handleSubmitAnswer(null); // Automatically submit null answer when time runs out
     }
     return () => clearTimeout(timer);
-  }, [timeLeft, gameOver, playerAnswered, handleSubmitAnswer, gameStarted]);
+  }, [
+    timeLeft,
+    gameOver,
+    playerAnswered,
+    handleSubmitAnswer,
+    gameStarted,
+    gameData?.timeStarted,
+  ]);
 
   if (!gameData || !currentQuestion || playerNumber === null) {
     return <div>Loading...</div>;
@@ -308,23 +345,23 @@ const Game: React.FC = () => {
                 onClick={() => handleSelectAnswer(answer)}
                 disabled={playerAnswered}
                 className={`
-        font-bold py-2 px-4 rounded
-        ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
-        ${
-          !showAnswers && selectedAnswer === answer
-            ? "ring-2 ring-yellow-500"
-            : ""
-        }
-        ${
-          showAnswers
-            ? answer === currentQuestion.correctAnswer
-              ? "bg-green-500 text-white"
-              : answer === submittedAnswer
-              ? "bg-red-500 text-white ring-2 ring-yellow-500"
-              : "bg-red-500 text-white"
-            : "bg-blue-500 hover:bg-blue-600 text-white"
-        }
-      `}
+            font-bold py-2 px-4 rounded
+            ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
+            ${
+              !showAnswers && selectedAnswer === answer
+                ? "ring-2 ring-yellow-500"
+                : ""
+            }
+            ${
+              showAnswers
+                ? answer === currentQuestion.correctAnswer
+                  ? "bg-green-500 text-white"
+                  : answer === submittedAnswer
+                  ? "bg-red-500 text-white ring-2 ring-yellow-500"
+                  : "bg-red-500 text-white"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
+            }
+          `}
               >
                 {answer}
               </button>
@@ -341,6 +378,7 @@ const Game: React.FC = () => {
               Submit Answer
             </button>
           )}
+
           {playerAnswered ? (
             showAnswers ? (
               <p className="mt-4">
