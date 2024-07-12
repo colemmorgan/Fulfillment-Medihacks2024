@@ -7,6 +7,7 @@ import LandingReadings from "../components/LandingNotecard";
 import Reveal from "../components/framer-components/Reveal";
 import HeroImg from "../components/ui/HeroImg";
 import FadeUp from "../components/framer-components/FadeUp";
+import Footer from "../components/Footer";
 
 export const Home = () => {
   return (
@@ -69,9 +70,8 @@ export const Home = () => {
                   </figure>
 
                   <p className=" mt-4 leading-relaxed text-lg mb-4">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
-                    itaque quisquam sapiente aliquid, iusto corporis nihil vero
-                    aliquam consectetur nam.
+                  Progress through structured lessons, earning experience by
+                  answering questions correctly and mastering the material.
                   </p>
                   <Link to={"/courses"} className="w-full">
                     <p className="bg-main px-6 py-2.5 rounded-md semibold text-black text-center">
@@ -98,11 +98,10 @@ export const Home = () => {
                 </figure>
               
               <p className="mt-4 leading-relaxed text-lg mb-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
-                itaque quisquam sapiente aliquid, iusto corporis nihil vero
-                aliquam consectetur nam.
+              Challenge a friend or another player in real-time trivia battles
+              to see who knows more and earns the most points.
               </p>
-              <Link to={"/courses"} className="w-full">
+              <Link to={"/trivia"} className="w-full">
                 <span className="bg-main px-6 py-2.5 rounded-md semibold text-black w-full block text-center">
                   Go to Versus
                 </span>
@@ -114,7 +113,8 @@ export const Home = () => {
           <LandingReadings />
         </div>
       </div>
-      <div className="h-screen -mt-40 text-black bg-white">ghh</div>
+      <div className="h-[600px] -mt-40 text-black bg-white">ghh</div>
+      <Footer/>
     </>
   );
 };

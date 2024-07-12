@@ -73,22 +73,22 @@ const Stats: React.FC<StatsProps> = () => {
               <div className="">
                 <p className="semibold mb-1">Versus</p>
                 <div className="flex gap-4 text-sm">
-                  <p>Wins: 0</p>
-                  <p>Games Played: 0</p>
+                  <p>Wins: {userData?.versusWins}</p>
+                  <p>Games Played: {userData?.versusPlayed}</p>
                 </div>
               </div>
               <div className="">
                 <p className="semibold mb-1">Courses</p>
                 <div className="flex gap-4 text-sm">
-                  <p>Correct: 0</p>
-                  <p>Attempted: 0</p>
+                  <p>Correct: {userData?.problemsCorrect}</p>
+                  <p>Attempted: {userData?.problemsAttempted}</p>
                 </div>
               </div>
               <div className="">
                 <p className="semibold mb-1">Notecards</p>
                 <div className="flex gap-4 text-sm">
-                  <p>Sets Made: 0</p>
-                  <p>Sets Studied: 0</p>
+                  <p>Sets Created: 0</p>
+                  <p>Notecard XP: {userData?.notecardXP}</p>
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ const GameModes: React.FC<GameModesProps> = () => {
               Challenge a friend or another player in real-time trivia battles
               to see who knows more and earns the most points.
             </p>
-            <Link to={"/courses"}>
+            <Link to={"/trivia"}>
               <button className="bg-main text-center rounded-md py-1.5 text-sm w-full">
                 Launch Gamemode
               </button>

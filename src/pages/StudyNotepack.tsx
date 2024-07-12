@@ -7,6 +7,11 @@ import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/f
 
 import { getNotepacks } from "../firebase/getters/getNotepacks";
 import NotepackLink from "../components/ui/NotepackLink";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
+import { useRecoilState } from "recoil";
+import { userDataAtom } from "../atoms/user-data-atoms";
+import grantXP from "../firebase/transactions/GrantXp";
 
 type StudyNotepackProps = {};
 
@@ -48,6 +53,8 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
   const { notepack } = location.state as { notepack: Notepack };
   const [notepacks, setNotepacks] = useState<Notepack[]>();
   const [originalNotepacks, setOriginalNotepacks] = useState<Notepack[]>();
+  const [user] = useAuthState(auth)
+  const [userData] = useRecoilState(userDataAtom)
 
   useEffect(() => {
     const fetchNotepacks = async () => {
@@ -62,6 +69,11 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
 
     fetchNotepacks();
   }, []);
+
+  useEffect(() => {
+    if(!user || !userData) return
+    grantXP(user.uid, "notecard", 5)
+  },[])
   
 
   const [currentNotecardIndex, setCurrentNotecardIndex] = useState<number>(0);

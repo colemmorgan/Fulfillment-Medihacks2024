@@ -9,6 +9,7 @@ import { userDataAtom, userDataLoading } from "../atoms/user-data-atoms";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
+import grantXP from "../firebase/transactions/GrantXp";
 
 type NotepackMakerProps = {};
 
@@ -76,7 +77,7 @@ const NotepackMaker: React.FC<NotepackMakerProps> = () => {
   };
 
   const publishNotepack = () => {
-    if (!userData?.firstName || !userData.lastName) return;
+    if (!userData?.firstName || !userData.lastName || !user) return;
     createNotepack(
       notecards,
       notepackTitle,
@@ -84,6 +85,7 @@ const NotepackMaker: React.FC<NotepackMakerProps> = () => {
       userData.lastName
     );
     setShowPublishConfirmation(false);
+    grantXP(user.uid, "notecard", 75)
   };
 
   useEffect(() => {
