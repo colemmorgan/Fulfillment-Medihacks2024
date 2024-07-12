@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { BiCopy } from "react-icons/bi";
+import { toast, ToastOptions } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Trivia: React.FC = () => {
   const [gameId, setGameId] = useState<string | null>(null);
@@ -36,6 +39,26 @@ const Trivia: React.FC = () => {
   const handleJoinExternalGame = (event) => {
     event.preventDefault();
     navigate(`/newgame?id=${externalGameId}`);
+  };
+
+  const copyToClipboard = () => {
+    const toastOptions: ToastOptions = {
+      position: "top-center",
+      autoClose: 3000,
+      theme: "light",
+    };
+    try {
+      navigator.clipboard.writeText(gameId ?? "");
+      toast.success(
+        "Successfully copied the game ID to clipboard!",
+        toastOptions
+      );
+    } catch {
+      toast.error(
+        "Oops! Something went wrong trying to copy the game ID to clipboard!",
+        toastOptions
+      );
+    }
   };
 
   return (
@@ -76,7 +99,16 @@ const Trivia: React.FC = () => {
         </div>
       ) : (
         <div className="text-center">
-          <p className="mb-4">Game ID: {gameId}</p>
+          <div className="flex gap-x-2 mb-4">
+            <p>Game ID: {gameId}</p>
+            <button
+              className="mb-1"
+              title="Copy to clipboard!"
+              onClick={copyToClipboard}
+            >
+              <BiCopy />
+            </button>
+          </div>
           <button
             onClick={joinGame}
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
