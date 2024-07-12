@@ -17,6 +17,9 @@ import { userDataAtom, userDataLoading } from "./atoms/user-data-atoms";
 import NotepackMaker from "./pages/NotepackMaker";
 import NotecardHome from "./pages/NotecardHome";
 import StudyNotepack from "./pages/StudyNotepack";
+import Game from "./pages/Game";
+import NewGame from "./pages/NewGame";
+import Trivia from "./pages/Trivia";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -46,6 +49,9 @@ function App() {
           <Route path="/notepacks" element={<NotecardHome />} />
           <Route path="/notepack-maker" element={<NotepackMaker />} />
           <Route path="/notepacks/:id" element={<StudyNotepack />} />
+          <Route path="/trivia" element={<Trivia />} />
+          <Route path="/newgame" element={<NewGame />} />
+          <Route path="/game" element={<Game />} />
         </Routes>
       </Router>
     </>
