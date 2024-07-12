@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import {
   currentProblemAtom,
@@ -8,14 +8,16 @@ import {
 
 type QuestionChoiceProps = {
   value: string;
+  index: number;
 };
 
-const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value }) => {
+const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value, index }) => {
   const [selectedAnswer, setSelectedAnswer] = useRecoilState(
     setSelectedAnswerAtom
   );
   const [currentProblem] = useRecoilState(currentProblemAtom);
   const [revealAnswers] = useRecoilState(revealAnswersAtom);
+  const [letterChoice, setLetterChoice] = useState<string>("")
 
   const handleClick = () => {
     if (revealAnswers) return;
@@ -25,6 +27,21 @@ const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value }) => {
       setSelectedAnswer(value);
     }
   };
+
+  useEffect(() => {
+    if(index === 0) {
+      setLetterChoice("A")
+    }
+    else if(index === 1) {
+      setLetterChoice("B")
+    }
+    else if(index === 2) {
+      setLetterChoice("C")
+    }
+    else if(index === 3) {
+      setLetterChoice("D")
+    }
+  },[index])
 
   return (
     <div
@@ -44,7 +61,7 @@ const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value }) => {
           : ""
       }`}
     >
-      <AnswerBubble letter={"A"} value={value} />
+      <AnswerBubble letter={letterChoice} value={value} />
       <span>{value}</span>
     </div>
   );

@@ -28,33 +28,44 @@ interface UserData {
 const Courses: React.FC<CoursesProps> = () => {
   const [userData] = useRecoilState(userDataAtom);
 
+  const courses = [
+    {
+      id: "cpdflmp",
+      title: "Professional Development for Front-Line Medical Professionals",
+      desc: "Learn critical protocols for efficient emergency medical response.",
+      img: "/images/first-responders-course-img.jpg",
+    },
+    {
+      id: "ebpmm",
+      title: "Evidence-Based Practice in Modern Medicine",
+      desc: "Explore evidence-based practices for optimal patient care.",
+      img: "/images/ebpmm-course-img.jpg",
+    },
+    {
+      id: "merbps",
+      title: "Medical Error Reduction: Best Practices and Strategies",
+      desc: "Master advanced emergency response strategies.",
+      img: "/images/merbps-course-img.jpg",
+    },
+  ];
+
   return (
     <>
       <LandingNav />
       <div className="max-w-[1220px] mt-16 mx-auto px-4">
         <h1 className="text-center bold text-[42px]">Courses</h1>
         <ul className="flex gap-6 flex-wrap mt-12">
-          <StaggeredFadeUp index={0}>
-            <Course
-              img="/images/first-responders-course-img.jpg"
-              userData={userData}
-              id={"test-course"}
-            />
-          </StaggeredFadeUp>
-          <StaggeredFadeUp index={1}>
-            <Course
-              img="/images/wound-care-course-img.jpg"
-              userData={userData}
-              id={"test-course"}
-            />
-          </StaggeredFadeUp>
-          <StaggeredFadeUp index={2}>
-            <Course
-              img="/images/mental-health-course-img.jpg"
-              userData={userData}
-              id={"test-course"}
-            />
-          </StaggeredFadeUp>
+          {courses.map((course, index) => (
+            <StaggeredFadeUp index={index} key={course.title}>
+              <Course
+                img={course.img}
+                title={course.title}
+                id={course.id}
+                userData={userData}
+                desc={course.desc}
+              />
+            </StaggeredFadeUp>
+          ))}
         </ul>
       </div>
     </>
@@ -64,29 +75,33 @@ export default Courses;
 
 interface CourseProps {
   img: string;
+  title: string;
   userData: UserData | null;
+  desc: string;
   id: string;
 }
 
-const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
+const Course: React.FC<CourseProps> = ({ img, title, userData, id, desc }) => {
   const [showLoginMessage, setShowLoginMessage] = useState<boolean>(false);
   return (
     <>
-      <div className="py-4 px-6 bg-[#f2f4f5] border border-[#CACADD] rounded-xl">
-        <figure className="max-w-[330px] rounded-lg overflow-hidden border border-[#CACADD]">
-          <img src={img} alt="" />
-        </figure>
+      <div className="py-4 px-6 bg-[#f2f4f5] border border-[#CACADD] rounded-xl max-w-[380px]">
+        <Link to={`/courses/${id}`}>
+          <figure className="max-w-[330px] max-h-[220px] rounded-lg overflow-hidden border border-[#CACADD]">
+            <img
+              src={img}
+              alt=""
+              className=" w-full transition-all hover:scale-105 cursor-pointer"
+            />
+          </figure>
+        </Link>
         <div className="mt-5">
-          <p className="semibold text-xl">First Responders Course</p>
-          <p className="mt-3 max-w-[330px]">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam
-            officia dolor nobis iusto sapiente hic neque enim repellat
-            perferendis libero?
-          </p>
+          <p className="semibold text-xl">{title}</p>
+          <p className="mt-3 max-w-[330px]">{desc}</p>
         </div>
         <div className="flex justify-between mt-2 items-center">
           {userData ? (
-            <Link to={"/courses/test-course"}>
+            <Link to={`/courses/${id}`}>
               <button className=" bg-opaque px-4 py-2.5 semibold rounded-md hover:bg-main transition-all text-sm">
                 Launch Course
               </button>
@@ -101,7 +116,9 @@ const Course: React.FC<CourseProps> = ({ img, userData, id }) => {
               </button>
             </>
           )}
-          <span className="semibold">{userData ? userData[id] : "0"}%</span>
+          <span className="semibold">
+            {userData ? userData[`${id}Progress`] : "0"}%
+          </span>
         </div>
       </div>
       {showLoginMessage && (

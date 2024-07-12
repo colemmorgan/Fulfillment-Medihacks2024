@@ -60,7 +60,7 @@ body {
 .flip-card-inner {
   transition: transform 0.6s;
   transform-style: preserve-3d;
-  box-shadow: rgba(145, 149, 246,0.3) 0px 8px 28px 0px;
+  box-shadow: rgba(145, 149, 246,0.3) 0px 4px 16px 0px;
 }
 
 .flip-card-front,

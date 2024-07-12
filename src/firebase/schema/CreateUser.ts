@@ -11,11 +11,16 @@ interface UserData {
     experience: number;
     problemsAttempted: number;
     problemsCorrect: number;
-    problemsAttempted7D: number;
-    problemsCorrect7D: number;
-    course1Progress: number;
-    course2Progress: number;
-    course3Progress: number;
+    versusWins: number;
+    versusPlayed: number;
+    notepacksMade: number;
+    notepacksViewed: number;
+    cpdflmpProgress: number;
+    ebpmmProgress: number;
+    merbpsProgress: number;
+    versusXP: number;
+    notecardXP: number;
+    courseXP: number;
 }
 
 interface FormState {
@@ -23,7 +28,7 @@ interface FormState {
     lastName: string;
     email: string;
     password: string;
-  }
+}
 
 const createUser = (newUser: UserCredential, inputs: FormState): UserData => {
     const userData: UserData = {
@@ -34,19 +39,22 @@ const createUser = (newUser: UserCredential, inputs: FormState): UserData => {
         firstName: inputs.firstName,
         lastName: inputs.lastName,
         level: 1,
-        experience: 0, 
+        experience: 0,
         problemsAttempted: 0,
         problemsCorrect: 0,
-        problemsAttempted7D: 0,
-        problemsCorrect7D: 0,
-        course1Progress: 0,
-        course2Progress: 0,
-        course3Progress: 0,
+        versusWins: 0,
+        versusPlayed: 0,
+        notepacksMade: 0,
+        notepacksViewed: 0,
+        cpdflmpProgress: 0,
+        ebpmmProgress: 0,
+        merbpsProgress: 0,
+        versusXP: 0,
+        notecardXP:0,
+        courseXP: 0,
     };
     
-    return userData
-}
+    return userData;
+};
 
-
-export default createUser
-
+export default createUser;

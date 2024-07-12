@@ -37,8 +37,8 @@ const GradeQuestion = async (
         rewardFunction();
         updates.problemsCorrect = increment(1);
 
-        if (userData[courseId] < 100) {
-          updates[courseId] = increment(5);
+        if (userData[`${courseId}Progress`] < 100) {
+          updates[`${courseId}Progress`] = increment(5);
         }
 
         answerCorrect = true;

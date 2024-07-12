@@ -10,29 +10,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import GradeQuestion from "../../firebase/transactions/GradeQuestion";
 import { useReward } from "react-rewards";
-import useGetUserData from "../../firebase/getters/useGetUserData";
 import { FaSpinner } from "react-icons/fa";
 import { userDataAtom, userDataLoading } from "../../atoms/user-data-atoms";
+import grantXP from "../../firebase/transactions/GrantXp";
 
 type CourseNavProps = {};
-interface UserData {
-  uid: string;
-  email: string | null;
-  createdAt: number;
-  updatedAt: number;
-  firstName: string;
-  lastName: string;
-  level: number;
-  experience: number;
-  problemsAttempted: number;
-  problemsCorrect: number;
-  problemsAttempted7D: number;
-  problemsCorrect7D: number;
-  [key: string]: any;
-  course1Progress: number;
-  course2Progress: number;
-  course3Progress: number;
-}
+
+
+
+
 
 const CourseNav: React.FC<CourseNavProps> = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -45,7 +31,7 @@ const CourseNav: React.FC<CourseNavProps> = () => {
   const [loading] = useRecoilState(userDataLoading)
   const [updating, setUpdating] = useState<boolean>(false);
   const [showCompletionMessage, setShowCompletionMessage] =
-  useState<boolean>(true);
+  useState<boolean>(false);
 
   const checkAnswer = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -70,19 +56,22 @@ const CourseNav: React.FC<CourseNavProps> = () => {
       reward
     );
 
-    if (result) {
-      setUserData((prev: UserData | null) => {
-        if (prev && prev[courseId] === 100) {
-          return prev;
-        } else {
-          return {
-            ...prev!,
-            [courseId]:
-              (prev && prev[courseId] !== undefined ? prev[courseId] : 0) + 5,
-          };
-        }
-      });
+  if (result) {
+    const didUserGainXp = await grantXP(user.uid,"course",5)
+    if(didUserGainXp) {
+      setUserData(prev => ({...prev!, experience: (prev?.experience || 0) + 5}))
     }
+    setUserData((prevUserData) => {
+      if (prevUserData && prevUserData[`${courseId}Progress`] === 100) {
+        return prevUserData; 
+      } else {
+        return {
+          ...prevUserData!,
+          [`${courseId}Progress`]: (prevUserData && prevUserData[`${courseId}Progress`] !== undefined ? prevUserData[`${courseId}Progress`] : 0) + 5,
+        };
+      }
+    });
+  }
 
     setUpdating(false);
   };
@@ -95,7 +84,7 @@ const CourseNav: React.FC<CourseNavProps> = () => {
   }, [userData]);
 
   return (
-    <><nav className="max-w-[1124px] px-3 mx-auto flex justify-between py-5 items-center">
+    <><nav className="max-w-[1124px] px-6 mx-auto flex justify-between py-5 items-center">
     <ul className="flex gap-6">
       <Link to={"/"}>
         <li>Home</li>
@@ -107,8 +96,8 @@ const CourseNav: React.FC<CourseNavProps> = () => {
       <span className="mr-3 text-sm rounded-full border border-main h-12 w-12 flex items-center justify-center pt-0.5">
         {loading || updating ? (
           <FaSpinner className="animate-spin" />
-        ) : userData && courseId && userData[courseId] !== undefined ? (
-          `${userData[courseId]}%`
+        ) : userData && courseId && userData[`${courseId}Progress`] !== undefined ? (
+          `${userData[`${courseId}Progress`]}%`
         ) : (
           <FaSpinner className="animate-spin" />
         )}
