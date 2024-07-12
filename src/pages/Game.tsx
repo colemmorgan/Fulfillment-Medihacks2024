@@ -150,6 +150,9 @@ const Game: React.FC = () => {
             setGameStarted(true);
 
             // Start the timer for the first question
+            console.log("time start", data.timeStarted);
+            data.timeStarted = null;
+
             if (data.timeStarted === null) {
               const gameRef = doc(db, "games", gameId);
               updateDoc(gameRef, {
