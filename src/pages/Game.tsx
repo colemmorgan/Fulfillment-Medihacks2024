@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
-import { doc, updateDoc, onSnapshot } from "firebase/firestore";
+import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore";
 
 interface Question {
   id: string;
@@ -37,28 +37,34 @@ const QUESTIONS: Question[] = [
 
 const TIME_LIMIT = 15;
 
+type PlayerNumber = 1 | 2;
+type PlayerName = `Player ${PlayerNumber}`;
+
+type K = Record<PlayerName, number>;
+
 const Game: React.FC = () => {
-  const [gameData, setGameData] = useState<any>(null);
+  const [gameData, setGameData] = useState<DocumentData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [playerNumber, setPlayerNumber] = useState<PlayerNumber | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [scores, setScores] = useState<K>({
+    "Player 1": 0,
+    "Player 2": 0,
+  });
+
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
-  const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [playerAnswered, setPlayerAnswered] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [playerNumber, setPlayerNumber] = useState<1 | 2 | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const gameId = new URLSearchParams(location.search).get("id");
+
   const playerId = localStorage.getItem("playerId") || "Player 1";
-
-  const [player1Answered, setPlayer1Answered] = useState(false);
-  const [player2Answered, setPlayer2Answered] = useState(false);
-
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-
-  const [showAnswers, setShowAnswers] = useState(false);
-  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
 
   const shuffledAnswers = useMemo(() => {
     if (!currentQuestion) return [];
@@ -69,9 +75,7 @@ const Game: React.FC = () => {
   }, [currentQuestion]);
 
   const handleSelectAnswer = (answer: string) => {
-    if (!playerAnswered) {
-      setSelectedAnswer(answer);
-    }
+    if (!playerAnswered) setSelectedAnswer(answer);
   };
 
   const handleSubmitAnswer = useCallback(
@@ -82,8 +86,9 @@ const Game: React.FC = () => {
         !gameId ||
         playerAnswered ||
         playerNumber === null
-      )
+      ) {
         return;
+      }
 
       setPlayerAnswered(true);
       setSubmittedAnswer(answer);
@@ -122,10 +127,13 @@ const Game: React.FC = () => {
 
     const unsubscribe = onSnapshot(
       doc(db, "games", gameId),
+
       (docSnapshot) => {
         if (docSnapshot.exists()) {
           const data = docSnapshot.data();
+
           console.log("Game data received:", data);
+
           setGameData(data);
           setScores(data.scores || {});
 
@@ -140,6 +148,7 @@ const Game: React.FC = () => {
 
           if (data.players.length === 2 && !gameStarted) {
             setGameStarted(true);
+
             // Start the timer for the first question
             if (data.timeStarted === null) {
               const gameRef = doc(db, "games", gameId);
@@ -151,6 +160,7 @@ const Game: React.FC = () => {
 
           if (data.currentQuestionIndex < QUESTIONS.length) {
             setCurrentQuestion(QUESTIONS[data.currentQuestionIndex]);
+
             if (data.timeStarted) {
               const elapsedTime = Math.floor(
                 (Date.now() - data.timeStarted) / 1000
@@ -165,10 +175,7 @@ const Game: React.FC = () => {
               !!data.answers?.["Player 1"] || data.timeouts?.["Player 1"];
             const player2Answered =
               !!data.answers?.["Player 2"] || data.timeouts?.["Player 2"];
-            setPlayer1Answered(player1Answered);
-            setPlayer2Answered(player2Answered);
 
-            // Update playerAnswered state
             setPlayerAnswered(
               !!data.answers?.[`Player ${playerNumber}`] ||
                 data.timeouts?.[`Player ${playerNumber}`]
@@ -183,8 +190,10 @@ const Game: React.FC = () => {
 
               // Calculate and update scores
               const newScores = { ...data.scores };
+
               ["Player 1", "Player 2"].forEach((player) => {
                 const playerAnswer = data.answers[player];
+
                 if (
                   playerAnswer ===
                   QUESTIONS[data.currentQuestionIndex].correctAnswer
@@ -199,6 +208,7 @@ const Game: React.FC = () => {
 
               // Update scores in the database
               const gameRef = doc(db, "games", gameId);
+
               updateDoc(gameRef, {
                 scores: newScores,
                 scoresUpdated: true,
@@ -214,7 +224,7 @@ const Game: React.FC = () => {
                   timeouts: {},
                   timeStarted: null,
                   showAnswers: false,
-                  scoresUpdated: false, // Reset the flag for the next question
+                  scoresUpdated: false, // reset this flag for the next question
                 })
                   .then(() => {
                     console.log("Moving to next question:", nextQuestionIndex);
@@ -255,6 +265,7 @@ const Game: React.FC = () => {
   // timer
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (
       gameStarted &&
       !gameOver &&

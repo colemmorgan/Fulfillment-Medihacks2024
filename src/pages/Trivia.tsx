@@ -36,7 +36,7 @@ const Trivia: React.FC = () => {
     }
   };
 
-  const handleJoinExternalGame = (event) => {
+  const handleJoinExternalGame = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
     navigate(`/newgame?id=${externalGameId}`);
   };
