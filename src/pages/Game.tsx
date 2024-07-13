@@ -53,6 +53,7 @@ const Game: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   const [xpGranted, setXpGranted] = useState(false);
+  const [winner, setWinner] = useState<string | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,6 +68,35 @@ const Game: React.FC = () => {
       currentQuestion.correctAnswer,
     ].sort(() => Math.random() - 0.5);
   }, [currentQuestion]);
+
+  const memoizedScores = useMemo(() => {
+    if (!gameData || !user) return null;
+    const currentUserScore = scores[user.uid] || 0;
+    const opponentScore =
+      Object.entries(scores).find(([id]) => id !== user.uid)?.[1] || 0;
+    return (
+      <div className="mt-8">
+        <p className="text-xl">You: {currentUserScore}</p>
+        <p className="text-xl">Opponent: {opponentScore}</p>
+      </div>
+    );
+  }, [scores, user, gameData]);
+
+  // Use a callback to determine the winner
+  const determineWinner = useCallback(() => {
+    if (!user || Object.keys(scores).length !== 2) return null;
+    const [player1, player2] = Object.entries(scores);
+    if (player1[1] === player2[1]) return null; // Tie
+    return player1[1] > player2[1] ? player1[0] : player2[0];
+  }, [scores, user]);
+
+  // Handle game over and XP granting
+  useEffect(() => {
+    if (gameOver && user) {
+      const gameWinner = determineWinner();
+      setWinner(gameWinner);
+    }
+  }, [gameOver, user, determineWinner]);
 
   const handleSelectAnswer = (answer: string) => {
     if (!playerAnswered) setSelectedAnswer(answer);
@@ -280,28 +310,17 @@ const Game: React.FC = () => {
   }
 
   if (gameOver) {
-    let winner;
-
-    if (Object.values(scores).every((score, _, arr) => score === arr[0])) {
-      winner = null; // It's a tie
-    } else {
-      winner = Object.entries(scores).reduce((a, b) =>
-        a[1] > b[1] ? a : b
-      )[0];
-    }
-
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-8">Game Over</h1>
         <p className="text-2xl mb-4">Final Scores:</p>
-        {Object.entries(scores).map(([playerId, score]) => (
-          <p key={playerId} className="text-xl mb-2">
-            {playerId === user.uid ? "You" : "Opponent"}: {score}
-          </p>
-        ))}
+        {memoizedScores}
         <p className="text-3xl mt-4 mb-6">
           Winner:{" "}
-          {winner ? (winner === user.uid ? "You" : "Opponent") : "It's a tie!"}
+          {winner ? (winner === user?.uid ? "You" : "Opponent") : "It's a tie!"}
+        </p>
+        <p className="text-xl mb-4">
+          XP Earned: {winner === user?.uid ? 50 : 15}
         </p>
         <button
           onClick={() => navigate("/trivia")}
@@ -378,13 +397,7 @@ const Game: React.FC = () => {
           ) : (
             <p className="mt-4">Select your answer and submit!</p>
           )}
-          <div className="mt-8">
-            {Object.entries(scores).map(([playerId, score]) => (
-              <p key={playerId} className="text-xl">
-                {playerId === user.uid ? "You" : "Opponent"}: {score}
-              </p>
-            ))}
-          </div>
+          <div className="mt-8">{memoizedScores}</div>
         </>
       )}
     </div>
