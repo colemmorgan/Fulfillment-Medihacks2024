@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { firestore as db } from "../firebase/firebase";
+import { firestore as db, auth } from "../firebase/firebase";
 import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { SIMULATE_SECOND_PLAYER } from "../constants/trivia";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { BiCopy } from "react-icons/bi";
+import { toast, ToastOptions } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NewGame: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,12 +15,38 @@ const NewGame: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [user] = useAuthState(auth);
 
   const gameId = new URLSearchParams(location.search).get("id");
+
+  const copyToClipboard = () => {
+    const toastOptions: ToastOptions = {
+      position: "top-center",
+      autoClose: 3000,
+      theme: "light",
+    };
+    try {
+      navigator.clipboard.writeText(gameId ?? "");
+      toast.success(
+        "Successfully copied the game ID to clipboard!",
+        toastOptions
+      );
+    } catch {
+      toast.error(
+        "Oops! Something went wrong trying to copy the game ID to clipboard!",
+        toastOptions
+      );
+    }
+  };
 
   useEffect(() => {
     if (!gameId) {
       setError("Invalid game ID");
+      return;
+    }
+
+    if (!user) {
+      setError("You must be logged in to join a game");
       return;
     }
 
@@ -27,7 +57,7 @@ const NewGame: React.FC = () => {
       if (gameSnap.exists()) {
         setGameData(gameSnap.data());
       } else {
-        setError("Game not found");
+        setError(`Game not found: ${gameId}`);
       }
     };
 
@@ -40,41 +70,33 @@ const NewGame: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, [gameId]);
+  }, [gameId, user]);
 
   const handleReady = async () => {
-    if (!gameData || !gameId) return;
+    if (!gameData || !gameId || !user) return;
 
     const gameRef = doc(db, "games", gameId);
+    if (!gameData.players.includes(user.uid)) {
+      if (gameData.players.length >= 2) {
+        console.error("Game is full");
+        return;
+      }
 
-    let playerNumber;
-    if (gameData.players.length === 0) {
-      playerNumber = 1;
-    } else if (gameData.players.length === 1) {
-      playerNumber = 2;
-    } else {
-      console.error("Game is full");
-      return;
-    }
-
-    const playerId = `Player ${playerNumber}`;
-    localStorage.setItem("playerId", playerId);
-
-    const updatedPlayers = [...(gameData.players || []), playerId];
-    await updateDoc(gameRef, {
-      players: updatedPlayers,
-      status: updatedPlayers.length === 2 ? "ready" : "waiting",
-      [`scores.${playerId}`]: 0,
-    });
-
-    if (updatedPlayers.length === 2) {
-      // If this is the second player, initialize the game
+      const updatedPlayers = [...gameData.players, user.uid];
       await updateDoc(gameRef, {
-        currentQuestionIndex: 0,
-        answers: {},
-        timeStarted: null, // Set timeStarted to null initially
-        gameStartTime: Date.now(), // Add a gameStartTime field
+        players: updatedPlayers,
+        status: updatedPlayers.length === 2 ? "ready" : "waiting",
+        [`scores.${user.uid}`]: 0,
       });
+
+      if (updatedPlayers.length === 2) {
+        await updateDoc(gameRef, {
+          currentQuestionIndex: 0,
+          answers: {},
+          timeStarted: null,
+          gameStartTime: Date.now(),
+        });
+      }
     }
 
     setIsReady(true);
@@ -87,7 +109,19 @@ const NewGame: React.FC = () => {
   }, [gameData, gameId, navigate]);
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return (
+      <div className="grid place-items-center mt-5 gap-y-4">
+        <div className="text-red-500">{error}</div>
+        <div>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={() => navigate("/trivia")}
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!gameData) {
@@ -97,7 +131,16 @@ const NewGame: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">New Game</h1>
-      <p className="mb-4">Game ID: {gameId}</p>
+      <div className="flex gap-x-2 mb-4">
+        <p>Game ID: {gameId}</p>
+        <button
+          className="mb-1"
+          title="Copy to clipboard!"
+          onClick={copyToClipboard}
+        >
+          <BiCopy />
+        </button>
+      </div>
       <p className="mb-4">Players: {gameData.players.length}/2</p>
       {!isReady ? (
         <button
