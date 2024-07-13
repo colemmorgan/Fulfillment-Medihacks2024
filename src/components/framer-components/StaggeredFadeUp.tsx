@@ -34,6 +34,7 @@ const StaggeredFadeUp: React.FC<StaggeredFadeUpProps> = ({
         ease: "easeOut",
         delay: 0.1 * index,
       }}
+      className="list-none"
     >
       {children}
     </motion.li>

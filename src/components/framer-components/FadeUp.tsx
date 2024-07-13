@@ -17,7 +17,7 @@ const FadeUp: React.FC<FadeUpProps> = ({ children }) => {
 
   return (
     <motion.div
-      className=""
+      className="w-full"
       ref={ref}
       variants={{
         hidden: { opacity: 0, y: 75 },

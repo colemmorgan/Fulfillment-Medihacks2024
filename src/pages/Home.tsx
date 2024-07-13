@@ -8,6 +8,7 @@ import Reveal from "../components/framer-components/Reveal";
 import HeroImg from "../components/ui/HeroImg";
 import FadeUp from "../components/framer-components/FadeUp";
 import Footer from "../components/Footer";
+import About from "../components/About";
 
 export const Home = () => {
   return (
@@ -113,7 +114,7 @@ export const Home = () => {
           <LandingReadings />
         </div>
       </div>
-      <div className="h-[600px] -mt-40 text-black bg-white">ghh</div>
+      <About/>
       <Footer/>
     </>
   );

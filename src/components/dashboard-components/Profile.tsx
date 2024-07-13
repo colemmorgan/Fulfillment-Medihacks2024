@@ -4,6 +4,7 @@ import SmoothOpen from "../framer-components/SmoothOpen";
 import { FaChevronUp } from "react-icons/fa";
 import { useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
+import Badges from "./Badges";
 
 type ProfileProps = {};
 
@@ -71,9 +72,7 @@ const Profile: React.FC<ProfileProps> = () => {
               </div>
             </div>
 
-            <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
-              <p className="semibold text-xl text-center">Badges</p>
-            </div>
+            <Badges/>
 
             <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
               <p className="semibold text-xl text-center">
