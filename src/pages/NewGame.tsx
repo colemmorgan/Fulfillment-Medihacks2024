@@ -4,6 +4,9 @@ import { firestore as db, auth } from "../firebase/firebase";
 import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { SIMULATE_SECOND_PLAYER } from "../constants/trivia";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { BiCopy } from "react-icons/bi";
+import { toast, ToastOptions } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NewGame: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +18,26 @@ const NewGame: React.FC = () => {
   const [user] = useAuthState(auth);
 
   const gameId = new URLSearchParams(location.search).get("id");
+
+  const copyToClipboard = () => {
+    const toastOptions: ToastOptions = {
+      position: "top-center",
+      autoClose: 3000,
+      theme: "light",
+    };
+    try {
+      navigator.clipboard.writeText(gameId ?? "");
+      toast.success(
+        "Successfully copied the game ID to clipboard!",
+        toastOptions
+      );
+    } catch {
+      toast.error(
+        "Oops! Something went wrong trying to copy the game ID to clipboard!",
+        toastOptions
+      );
+    }
+  };
 
   useEffect(() => {
     if (!gameId) {
@@ -34,7 +57,7 @@ const NewGame: React.FC = () => {
       if (gameSnap.exists()) {
         setGameData(gameSnap.data());
       } else {
-        setError("Game not found");
+        setError(`Game not found: ${gameId}`);
       }
     };
 
@@ -86,7 +109,19 @@ const NewGame: React.FC = () => {
   }, [gameData, gameId, navigate]);
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return (
+      <div className="grid place-items-center mt-5 gap-y-4">
+        <div className="text-red-500">{error}</div>
+        <div>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={() => navigate("/trivia")}
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!gameData) {
@@ -96,7 +131,16 @@ const NewGame: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">New Game</h1>
-      <p className="mb-4">Game ID: {gameId}</p>
+      <div className="flex gap-x-2 mb-4">
+        <p>Game ID: {gameId}</p>
+        <button
+          className="mb-1"
+          title="Copy to clipboard!"
+          onClick={copyToClipboard}
+        >
+          <BiCopy />
+        </button>
+      </div>
       <p className="mb-4">Players: {gameData.players.length}/2</p>
       {!isReady ? (
         <button

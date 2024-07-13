@@ -7,6 +7,12 @@ import { toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+const toastOptions: ToastOptions = {
+  position: "top-center",
+  autoClose: 3000,
+  theme: "light",
+};
+
 const Trivia: React.FC = () => {
   const [gameId, setGameId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,15 +53,17 @@ const Trivia: React.FC = () => {
 
   const handleJoinExternalGame = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
-    navigate(`/newgame?id=${externalGameId}`);
+
+    const extGameId = externalGameId.trim();
+
+    if (extGameId != "") {
+      navigate(`/newgame?id=${extGameId}`);
+    } else {
+      toast.error("Please enter a non-empty game ID", toastOptions);
+    }
   };
 
   const copyToClipboard = () => {
-    const toastOptions: ToastOptions = {
-      position: "top-center",
-      autoClose: 3000,
-      theme: "light",
-    };
     try {
       navigator.clipboard.writeText(gameId ?? "");
       toast.success(
