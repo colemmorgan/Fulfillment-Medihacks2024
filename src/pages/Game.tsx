@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { firestore as db } from "../firebase/firebase";
+import { firestore as db, auth } from "../firebase/firebase";
 import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 interface Question {
   id: string;
@@ -37,22 +38,13 @@ const QUESTIONS: Question[] = [
 
 const TIME_LIMIT = 15;
 
-type PlayerNumber = 1 | 2;
-type PlayerName = `Player ${PlayerNumber}`;
-
-type K = Record<PlayerName, number>;
-
 const Game: React.FC = () => {
   const [gameData, setGameData] = useState<DocumentData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [playerNumber, setPlayerNumber] = useState<PlayerNumber | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
-  const [scores, setScores] = useState<K>({
-    "Player 1": 0,
-    "Player 2": 0,
-  });
+  const [scores, setScores] = useState<Record<string, number>>({});
 
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [playerAnswered, setPlayerAnswered] = useState(false);
@@ -61,10 +53,9 @@ const Game: React.FC = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);
 
   const gameId = new URLSearchParams(location.search).get("id");
-
-  const playerId = localStorage.getItem("playerId") || "Player 1";
 
   const shuffledAnswers = useMemo(() => {
     if (!currentQuestion) return [];
@@ -80,13 +71,7 @@ const Game: React.FC = () => {
 
   const handleSubmitAnswer = useCallback(
     async (answer: string | null = selectedAnswer) => {
-      if (
-        !gameData ||
-        !currentQuestion ||
-        !gameId ||
-        playerAnswered ||
-        playerNumber === null
-      ) {
+      if (!gameData || !currentQuestion || !gameId || playerAnswered || !user) {
         return;
       }
 
@@ -97,28 +82,20 @@ const Game: React.FC = () => {
 
       try {
         await updateDoc(gameRef, {
-          [`answers.Player ${playerNumber}`]: answer,
-          [`timeouts.Player ${playerNumber}`]: answer === null,
+          [`answers.${user.uid}`]: answer,
+          [`timeouts.${user.uid}`]: answer === null,
         });
-        console.log(`Player ${playerNumber} answer submitted:`, answer);
+        console.log(`Player ${user.uid} answer submitted:`, answer);
       } catch (error) {
         console.error("Error updating game data:", error);
       }
     },
-    [
-      gameData,
-      currentQuestion,
-      gameId,
-      playerAnswered,
-      playerNumber,
-      selectedAnswer,
-    ]
+    [gameData, currentQuestion, gameId, playerAnswered, user, selectedAnswer]
   );
 
-  // The useEffect hook that listens for game updates
   useEffect(() => {
-    if (!gameId) {
-      console.log("No game ID found");
+    if (!gameId || !user) {
+      console.log("No game ID or user found");
       navigate("/trivia");
       return;
     }
@@ -127,29 +104,17 @@ const Game: React.FC = () => {
 
     const unsubscribe = onSnapshot(
       doc(db, "games", gameId),
-
       (docSnapshot) => {
         if (docSnapshot.exists()) {
           const data = docSnapshot.data();
-
           console.log("Game data received:", data);
 
           setGameData(data);
           setScores(data.scores || {});
 
-          // determine player number
-          if (playerNumber === null) {
-            if (data.players[0] === playerId) {
-              setPlayerNumber(1);
-            } else if (data.players[1] === playerId) {
-              setPlayerNumber(2);
-            }
-          }
-
           if (data.players.length === 2 && !gameStarted) {
             setGameStarted(true);
 
-            // Start the timer for the first question
             if (data.timeStarted === null) {
               const gameRef = doc(db, "games", gameId);
               updateDoc(gameRef, {
@@ -171,38 +136,37 @@ const Game: React.FC = () => {
             }
 
             // Update answer status for both players
-            const player1Answered =
-              !!data.answers?.["Player 1"] || data.timeouts?.["Player 1"];
-            const player2Answered =
-              !!data.answers?.["Player 2"] || data.timeouts?.["Player 2"];
+            const allPlayersAnswered = data.players.every(
+              (playerId: string) =>
+                !!data.answers?.[playerId] || data.timeouts?.[playerId]
+            );
 
             setPlayerAnswered(
-              !!data.answers?.[`Player ${playerNumber}`] ||
-                data.timeouts?.[`Player ${playerNumber}`]
+              !!data.answers?.[user.uid] || data.timeouts?.[user.uid]
             );
 
             // check if both players have answered
-            if (player1Answered && player2Answered && !data.scoresUpdated) {
+            if (allPlayersAnswered && !data.scoresUpdated) {
               console.log(
-                "Both players have answered or timed out. Showing answers and preparing to move to next question."
+                "All players have answered or timed out. Showing answers and preparing to move to next question."
               );
               setShowAnswers(true);
 
               // Calculate and update scores
               const newScores = { ...data.scores };
 
-              ["Player 1", "Player 2"].forEach((player) => {
-                const playerAnswer = data.answers[player];
+              data.players.forEach((playerId: string) => {
+                const playerAnswer = data.answers[playerId];
 
                 if (
                   playerAnswer ===
                   QUESTIONS[data.currentQuestionIndex].correctAnswer
                 ) {
-                  newScores[player] = (newScores[player] || 0) + 15;
+                  newScores[playerId] = (newScores[playerId] || 0) + 15;
                 } else if (playerAnswer !== null) {
-                  newScores[player] = (newScores[player] || 0) - 5;
+                  newScores[playerId] = (newScores[playerId] || 0) - 5;
                 } else {
-                  newScores[player] = (newScores[player] || 0) - 10;
+                  newScores[playerId] = (newScores[playerId] || 0) - 10;
                 }
               });
 
@@ -249,10 +213,6 @@ const Game: React.FC = () => {
             setGameOver(true);
           }
         }
-        // } else {
-        //   console.log("Game document does not exist");
-        //   navigate("/trivia");
-        // }
       },
       (error) => {
         console.error("Error fetching game data:", error);
@@ -260,9 +220,8 @@ const Game: React.FC = () => {
     );
 
     return () => unsubscribe();
-  }, [gameId, navigate, playerId, playerNumber, gameStarted]);
+  }, [gameId, navigate, user, gameStarted]);
 
-  // timer
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -296,18 +255,15 @@ const Game: React.FC = () => {
     gameData?.timeStarted,
   ]);
 
-  if (!gameData || !currentQuestion || playerNumber === null) {
+  if (!gameData || !currentQuestion || !user) {
     return <div>Loading...</div>;
   }
 
   if (gameOver) {
     let winner;
 
-    const p1 = "Player 1";
-    const p2 = "Player 2";
-
-    if (scores[p1] === scores[p2]) {
-      winner = null;
+    if (Object.values(scores).every((score, _, arr) => score === arr[0])) {
+      winner = null; // It's a tie
     } else {
       winner = Object.entries(scores).reduce((a, b) =>
         a[1] > b[1] ? a : b
@@ -318,13 +274,14 @@ const Game: React.FC = () => {
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-8">Game Over</h1>
         <p className="text-2xl mb-4">Final Scores:</p>
-        {Object.entries(scores).map(([player, score]) => (
-          <p key={player} className="text-xl mb-2">
-            {player}: {score}
+        {Object.entries(scores).map(([playerId, score]) => (
+          <p key={playerId} className="text-xl mb-2">
+            {playerId === user.uid ? "You" : "Opponent"}: {score}
           </p>
         ))}
         <p className="text-3xl mt-4 mb-6">
-          Winner: {winner ? winner : "None, it's a draw"}
+          Winner:{" "}
+          {winner ? (winner === user.uid ? "You" : "Opponent") : "It's a tie!"}
         </p>
         <button
           onClick={() => navigate("/trivia")}
@@ -339,7 +296,7 @@ const Game: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">Trivia Game</h1>
-      <p className="text-xl mb-4">You are Player {playerNumber}</p>
+      <p className="text-xl mb-4">You are {user.uid}</p>
       {!gameStarted ? (
         <p>Waiting for other player to join...</p>
       ) : (
@@ -356,23 +313,23 @@ const Game: React.FC = () => {
                 onClick={() => handleSelectAnswer(answer)}
                 disabled={playerAnswered}
                 className={`
-            font-bold py-2 px-4 rounded
-            ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
-            ${
-              !showAnswers && selectedAnswer === answer
-                ? "ring-2 ring-yellow-500"
-                : ""
-            }
-            ${
-              showAnswers
-                ? answer === currentQuestion.correctAnswer
-                  ? "bg-green-500 text-white"
-                  : answer === submittedAnswer
-                  ? "bg-red-500 text-white ring-2 ring-yellow-500"
-                  : "bg-red-500 text-white"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
-            }
-          `}
+                  font-bold py-2 px-4 rounded
+                  ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
+                  ${
+                    !showAnswers && selectedAnswer === answer
+                      ? "ring-2 ring-yellow-500"
+                      : ""
+                  }
+                  ${
+                    showAnswers
+                      ? answer === currentQuestion.correctAnswer
+                        ? "bg-green-500 text-white"
+                        : answer === submittedAnswer
+                        ? "bg-red-500 text-white ring-2 ring-yellow-500"
+                        : "bg-red-500 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }
+                `}
               >
                 {answer}
               </button>
@@ -402,9 +359,9 @@ const Game: React.FC = () => {
             <p className="mt-4">Select your answer and submit!</p>
           )}
           <div className="mt-8">
-            {Object.entries(scores).map(([player, score]) => (
-              <p key={player} className="text-xl">
-                {player}: {score}
+            {Object.entries(scores).map(([playerId, score]) => (
+              <p key={playerId} className="text-xl">
+                {playerId === user.uid ? "You" : "Opponent"}: {score}
               </p>
             ))}
           </div>

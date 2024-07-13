@@ -1,27 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { firestore as db } from "../firebase/firebase";
+import { firestore as db, auth } from "../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { BiCopy } from "react-icons/bi";
 import { toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Trivia: React.FC = () => {
   const [gameId, setGameId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [externalGameId, setExternalGameId] = useState("");
+  const [user] = useAuthState(auth);
 
   const navigate = useNavigate();
 
   const startNewGame = async () => {
+    if (!user) {
+      toast.error("You must be logged in to start a game");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const gameRef = await addDoc(collection(db, "games"), {
         createdAt: new Date(),
-        players: [],
+        players: [user.uid],
         status: "waiting",
         currentQuestionIndex: 0,
-        scores: {},
+        scores: {
+          [user.uid]: 0,
+        },
       });
       setGameId(gameRef.id);
     } catch (error) {
