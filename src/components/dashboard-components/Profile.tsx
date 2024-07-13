@@ -3,6 +3,8 @@ import { userDataAtom } from "../../atoms/user-data-atoms";
 import SmoothOpen from "../framer-components/SmoothOpen";
 import { FaChevronUp } from "react-icons/fa";
 import { useState } from "react";
+import { FaRegUserCircle } from "react-icons/fa";
+import Badges from "./Badges";
 
 type ProfileProps = {};
 
@@ -25,7 +27,12 @@ const Profile: React.FC<ProfileProps> = () => {
   return (
     <div className="mt-6 border-b border-borderColor pb-4">
       <div className="flex justify-between">
-        <p className="text-2xl">Profile</p>
+        <p className="text-2xl flex gap-3">
+          <span className="text-main pt-0.5">
+            <FaRegUserCircle />
+          </span>
+          Profile
+        </p>
         <p
           className="flex text-[#888888] items-center gap-3 cursor-pointer text-sm"
           onClick={() => setHideTab(!hideTab)}
@@ -46,7 +53,7 @@ const Profile: React.FC<ProfileProps> = () => {
                   {userData?.firstName} {userData?.lastName}
                 </p>
                 <p className="mt-1">{userData?.email}</p>
-                <p className="mt-0.5 text-sm">
+                <p className="mt-1 text-sm">
                   Account Created:{" "}
                   {convertTimestampToDate(userData?.createdAt || 0)}
                 </p>
@@ -65,14 +72,20 @@ const Profile: React.FC<ProfileProps> = () => {
               </div>
             </div>
 
-            <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
-              <p className="semibold text-xl text-center">Badges</p>
-            </div>
+            <Badges/>
 
             <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
               <p className="semibold text-xl text-center">
                 Experience Breakdown
               </p>
+              <div className="flex flex-col gap-1">
+                <p className="mt-4">
+                  Lifetime experience: {userData.experience}
+                </p>
+                <p>Experience from courses: {userData.courseXP}</p>
+                <p>Experience from Notecards: {userData.notecardXP}</p>
+                <p>Experience from versus: {userData.versusXP}</p>
+              </div>
             </div>
           </ul>
         </SmoothOpen>

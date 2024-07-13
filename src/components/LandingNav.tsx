@@ -9,6 +9,7 @@ import { userDataAtom } from "../atoms/user-data-atoms";
 
 export const LandingNav = () => {
   const [user] = useAuthState(auth);
+  
   const [_, setUserData] = useRecoilState(userDataAtom)
   const [showAccountMenu, setShowAccountMenu] = useState<boolean>(false);
   const [signOut] = useSignOut(auth);
@@ -31,8 +32,8 @@ export const LandingNav = () => {
             <Link to={"/"}><li>Home</li></Link>
             <Link to={"/dashboard"}><li>Dashboard</li></Link>
             <Link to={"/notepacks"}><li>Notecards</li></Link>
-            <li>Versus</li>
-            <li>Courses</li>
+            <Link to={"/trivia"}><li>Versus</li></Link>
+            <Link to={"/courses"}><li>Courses</li></Link>
             {user ? (
               <li
                 className="py-2.5 pb-2 px-5 bg-opaque rounded-md cursor-pointer"
@@ -61,19 +62,20 @@ interface AccountMenuProps {
 }
 
 const AccountMenu: React.FC<AccountMenuProps> = ({ showAccountMenu, handleLogout }) => {
+  const [userData] = useRecoilState(userDataAtom)
   return (
     <>
       {showAccountMenu && (
-        <div className="absolute  bg-opacity-50 border border-main rounded-lg right-4 top-[72px] z-40 overflow-hidden">
+        <div className="absolute  border border-main rounded-lg right-4 top-[72px] z-40 overflow-hidden bg-white">
           <div className=" py-5 border-b border-opaque flex items-center px-6">
-            <Link to={"/account"}>
+            <Link to={"/dashboard"}>
               <div className="h-10 w-10 rounded-full bg-main cursor-pointer"></div>
             </Link>
             <div className="ml-4">
-              <Link to={"/account"}>
-                <p className=" cursor-pointer semibold mb-0.5">Cole Morgan</p>
+              <Link to={"/dashboard"}>
+                <p className=" cursor-pointer semibold mb-0.5">{userData?.firstName} {userData?.lastName}</p>
               </Link>
-              <p className="text-sm ">colemmorgann@gmail.com</p>
+              <p className="text-sm ">{userData?.email}</p>
             </div>
           </div>
           <div

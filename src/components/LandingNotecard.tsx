@@ -16,7 +16,7 @@ const LandingNotecard: React.FC<LandingNotecardProps> = () => {
         <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
       </div>
-      <div className="max-w-[802px] w-[802px] border border-borderColor rounded-xl py-8  text-black">
+      <div className="max-w-[802px] w-full border border-borderColor rounded-xl py-8  text-black">
         <div className="pb-6 border-b border-borderColor w-full text-center">
           <p className="text-4xl semibold">Still not satisfied?</p>
           <p className="mt-2 text-xl">Create notecards for others to study!</p>

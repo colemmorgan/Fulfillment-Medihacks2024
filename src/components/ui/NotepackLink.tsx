@@ -28,7 +28,7 @@ const NotepackLink: React.FC<NotepackLinkProps> = ({notepack}) => {
       };
   return (
     <li
-      className="p-5 pb-4 border border-borderColor max-w-[350px] h-48 w-full rounded-xl flex flex-col justify-between cursor-pointer
+      className="p-5 pb-4 border border-borderColor w-[350px] h-48  rounded-xl flex flex-col justify-between cursor-pointer
      hover:border-opaque transition-all notepack-link"
      onClick={handleClick}
     >
