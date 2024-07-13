@@ -6,6 +6,7 @@ import { BiCopy } from "react-icons/bi";
 import { toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { LandingNav } from "../components/LandingNav";
 
 const toastOptions: ToastOptions = {
   position: "top-center",
@@ -79,32 +80,34 @@ const Trivia: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Trivia Game</h1>
-      {!gameId ? (
+   <>
+   <LandingNav/>
+   <div className="mt-14 flex flex-col items-center justify-center max-w-[800px] px-6 mx-auto">
+      <h1 className="text-4xl font-bold mb-10">Welcome to Versus!</h1>
+       {!gameId ? (
         <div className="flex flex-col">
           <button
             onClick={startNewGame}
             disabled={isLoading}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-main hover:bg-opaque font-bold py-2 px-4 rounded transition-all"
           >
             {isLoading ? "Creating Game..." : "Start New Game"}
           </button>
 
-          <div className="h-0.5 my-4 flex self-stretch bg-blue-300"></div>
+          <div className="h-0.5 my-4 flex self-stretch bg-opaque"></div>
 
           <div>
             <form onSubmit={handleJoinExternalGame}>
               <div className="flex gap-x-2">
                 <input
-                  className="bg-gray-50 hover:bg-gray-100 text-blue-600 border-2 border-blue-500 font-bold py-2 px-4 rounded"
+                  className="w-3/4 bg-gray-50 hover:bg-gray-100 border-2 border-opaque outline-main font-bold py-2 px-4 rounded transition-all"
                   type="text"
                   placeholder="Or enter a game ID"
                   value={externalGameId}
                   onChange={(event) => setExternalGameId(event.target.value)}
                 />
                 <button
-                  className="bg-blue-500 py-2 px-4 rounded text-white hover:bg-blue-600 transition-colors duration-200 border-2 border-transparent"
+                  className="w-1/4 bg-main py-2 px-4 rounded hover:bg-opaque semibold transition-colors duration-200 border-2 border-transparent"
                   type="submit"
                   onClick={handleJoinExternalGame}
                 >
@@ -113,28 +116,33 @@ const Trivia: React.FC = () => {
               </div>
             </form>
           </div>
+          <img src="/images/versus.svg" alt="" className="max-w-[450px] mt-24"/>
         </div>
       ) : (
         <div className="text-center">
-          <div className="flex gap-x-2 mb-4">
+          <div className="flex gap-x-2 mb-2 justify-center">
             <p>Game ID: {gameId}</p>
+            
             <button
-              className="mb-1"
+              className="mb-1 "
               title="Copy to clipboard!"
               onClick={copyToClipboard}
             >
               <BiCopy />
             </button>
           </div>
+          <p className="mb-4">(Send this code to your friend then hit join!)</p>
           <button
             onClick={joinGame}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-80"
           >
             Join Game
           </button>
+          <img src="/images/versus.svg" alt="" className="max-w-[450px] mt-20"/>
         </div>
       )}
-    </div>
+       
+    </div></>
   );
 };
 

@@ -7,6 +7,7 @@ type BadgesProps = {};
 const Badges: React.FC<BadgesProps> = () => {
   const [userData] = useRecoilState(userDataAtom);
 
+
   const countCoursesCompleted = (): number => {
     if (!userData) return 0;
     let count: number = 0;

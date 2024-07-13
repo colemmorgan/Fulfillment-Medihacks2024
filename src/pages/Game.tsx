@@ -1,47 +1,40 @@
 // FIX ONE DONE
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { firestore as db, auth } from "../firebase/firebase";
 import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import grantXP from "../firebase/transactions/GrantXp";
+import fetchQuestions from "../firebase/getters/getCourseProblems";
 
 interface Question {
   id: string;
   question: string;
   incorrectAnswers: string[];
   correctAnswer: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: string;
 }
 
-const QUESTIONS: Question[] = [
-  {
-    id: "1",
-    question: "What is 2 + 2?",
-    incorrectAnswers: ["3", "5", "6"],
-    correctAnswer: "4",
-    difficulty: "easy",
-  },
-  {
-    id: "2",
-    question: "What is 7 x 8?",
-    incorrectAnswers: ["54", "62", "58"],
-    correctAnswer: "56",
-    difficulty: "medium",
-  },
-  {
-    id: "3",
-    question: "What is the square root of 144?",
-    incorrectAnswers: ["10", "14", "16"],
-    correctAnswer: "12",
-    difficulty: "hard",
-  },
-];
-
-const TIME_LIMIT = 15;
+const TIME_LIMIT = 25;
 
 const Game: React.FC = () => {
+  // get questions
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  useEffect(() => {
+    const fetchQuestionsData = async () => {
+      try {
+        const fetchedQuestions = await fetchQuestions("trivia");
+        if (fetchedQuestions && fetchedQuestions.questions.length > 0) {
+          setQuestions(fetchedQuestions.questions);
+        }
+      } catch (err) {}
+    };
+    fetchQuestionsData();
+  }, []);
+
+  //
   const [gameData, setGameData] = useState<DocumentData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -83,7 +76,7 @@ const Game: React.FC = () => {
     const opponentScore =
       Object.entries(scores).find(([id]) => id !== user.uid)?.[1] || 0;
     return (
-      <div className="mt-8">
+      <div className="mt-4 flex gap-4">
         <p className="text-xl">You: {currentUserScore}</p>
         <p className="text-xl">Opponent: {opponentScore}</p>
       </div>
@@ -166,8 +159,8 @@ const Game: React.FC = () => {
             setTimeLeft(calculatedTimeLeft);
           }
 
-          if (data.currentQuestionIndex < QUESTIONS.length) {
-            setCurrentQuestion(QUESTIONS[data.currentQuestionIndex]);
+          if (data.currentQuestionIndex < 4) {
+            setCurrentQuestion(questions[data.currentQuestionIndex]);
 
             if (data.timeStarted) {
               const elapsedTime = Math.floor(
@@ -203,7 +196,7 @@ const Game: React.FC = () => {
 
                 if (
                   playerAnswer ===
-                  QUESTIONS[data.currentQuestionIndex].correctAnswer
+                  questions[data.currentQuestionIndex].correctAnswer
                 ) {
                   newScores[playerId] = (newScores[playerId] || 0) + 15;
                 } else if (playerAnswer !== null) {
@@ -245,7 +238,7 @@ const Game: React.FC = () => {
                   });
 
                 // Check if the game is over
-                if (nextQuestionIndex >= QUESTIONS.length) {
+                if (nextQuestionIndex >= 4) {
                   updateDoc(gameRef, { status: "completed" });
                 }
               }, 2000); // 2 second delay before moving to next question
@@ -306,66 +299,75 @@ const Game: React.FC = () => {
 
   if (gameOver) {
     return (
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-8">Game Over</h1>
-        <p className="text-2xl mb-4">Final Scores:</p>
+      <div className="max-w-[550px] px-4 mx-auto flex flex-col items-center pt-24">
+        <h1 className="text-5xl font-semibold">Game Over</h1>
+        <p className="mt-4 text-3xl">
+          {winner
+            ? winner === user?.uid
+              ? "You Win!"
+              : "Try Again!"
+            : "It's a tie!"}
+        </p>
         {memoizedScores}
-        <p className="text-3xl mt-4 mb-6">
-          Winner:{" "}
-          {winner ? (winner === user?.uid ? "You" : "Opponent") : "It's a tie!"}
-        </p>
-        <p className="text-xl mb-4">
-          XP Earned: {winner === user?.uid ? 50 : 15}
-        </p>
-        <button
-          onClick={() => navigate("/trivia")}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Play Again
-        </button>
+        <div className="flex gap-3 mt-8">
+          <button
+            onClick={() => navigate("/trivia")}
+            className="bg-main hover:bg-opaque transition-all semibold py-2 px-4 rounded w-44"
+          >
+            Play Again
+          </button>
+          <Link to={"/"}>
+            <button className="bg-black text-white hover:bg-opacity-80 transition-all w-44 semibold py-2 px-4 rounded">
+              Home
+            </button>
+          </Link>
+        </div>
+        <img
+          src="/images/game-over.svg"
+          alt=""
+          className="max-w-[420px] mt-20"
+        />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Trivia Game</h1>
-      <p className="text-xl mb-4">You are {user.uid}</p>
+    <div className="flex flex-col items-center justify-center pt-20 max-w-[800px] px-3 mx-auto">
+      <h1 className="text-4xl font-bold mb-6">Versus Mode</h1>
+      {/* <p className="text-xl mb-4">You are {user.uid}</p> */}
       {!gameStarted ? (
         <p>Waiting for other player to join...</p>
       ) : (
         <>
           <p className="text-xl mb-4">
-            Question {gameData.currentQuestionIndex + 1} of {QUESTIONS.length}
+            Question {gameData.currentQuestionIndex + 1} of {4}
           </p>
           <p className="text-lg mb-4">Time left: {timeLeft} seconds</p>
-          <p className="text-2xl mb-6">{currentQuestion?.question}</p>
-          <div className="grid grid-cols-2 gap-4">
+          <p className="text-2xl mb-6 ">{currentQuestion?.question}</p>
+          <div className="flex flex-col gap-4  w-full">
             {shuffledAnswers.map((answer, index) => (
               <button
                 key={index}
-                onClick={() => handleSelectAnswer(answer)}
                 disabled={playerAnswered}
-                className={`
-                  font-bold py-2 px-4 rounded
-                  ${playerAnswered ? "opacity-50 cursor-not-allowed" : ""}
-                  ${
-                    !showAnswers && selectedAnswer === answer
-                      ? "ring-2 ring-yellow-500"
+                onClick={() => handleSelectAnswer(answer)}
+                className={`relative  w-full py-5 px-8 border border-borderColor flex items-center rounded-md cursor-pointer
+                ${
+                  showAnswers
+                    ? answer === currentQuestion.correctAnswer
+                      ? "bg-green-300"
                       : ""
-                  }
-                  ${
-                    showAnswers
-                      ? answer === currentQuestion.correctAnswer
-                        ? "bg-green-500 text-white"
-                        : answer === submittedAnswer
-                        ? "bg-red-500 text-white ring-2 ring-yellow-500"
-                        : "bg-red-500 text-white"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }
-                `}
+                    : "bg-[#f2f4f5]"
+                } ${
+                  showAnswers && answer !== currentQuestion.correctAnswer
+                    ? "bg-red-200"
+                    : ""
+                } ${
+                  !showAnswers && selectedAnswer === answer
+                    ? "ring-2 ring-yellow-500"
+                    : ""
+                }`}
               >
-                {answer}
+                <span>{answer}</span>
               </button>
             ))}
           </div>
@@ -373,7 +375,7 @@ const Game: React.FC = () => {
             <button
               onClick={() => handleSubmitAnswer()}
               disabled={selectedAnswer === null}
-              className={`mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${
+              className={`mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${
                 selectedAnswer === null ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
@@ -387,10 +389,10 @@ const Game: React.FC = () => {
                 Answers revealed. Moving to next question...
               </p>
             ) : (
-              <p className="mt-4">Waiting for other player...</p>
+              <p className="mt-6">Waiting for other player...</p>
             )
           ) : (
-            <p className="mt-4">Select your answer and submit!</p>
+            <></>
           )}
           <div className="mt-8">{memoizedScores}</div>
         </>

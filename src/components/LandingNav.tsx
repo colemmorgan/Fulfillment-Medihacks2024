@@ -26,7 +26,7 @@ export const LandingNav = () => {
   return (
     <>
       <nav className=" h-20 text-black relative">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between h-full px-4 relative">
+        <div className="max-w-[1200px] mx-auto flex items-center justify-between h-full px-6 relative">
           <p className="semibold text-xl">Fulfillment</p>
           <ul className=" flex gap-5 items-center text-[15px]">
             <Link to={"/"}><li>Home</li></Link>
