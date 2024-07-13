@@ -25,7 +25,7 @@ const Trivia: React.FC = () => {
     try {
       const gameRef = await addDoc(collection(db, "games"), {
         createdAt: new Date(),
-        players: [user.uid],
+        players: [],
         status: "waiting",
         currentQuestionIndex: 0,
         scores: {
