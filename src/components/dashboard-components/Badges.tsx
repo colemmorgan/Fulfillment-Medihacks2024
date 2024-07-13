@@ -5,41 +5,95 @@ import { userDataAtom } from "../../atoms/user-data-atoms";
 type BadgesProps = {};
 
 const Badges: React.FC<BadgesProps> = () => {
-    const [userData] = useRecoilState(userDataAtom);
+  const [userData] = useRecoilState(userDataAtom);
+
+  const countCoursesCompleted = (): number => {
+    if (!userData) return 0;
+    let count: number = 0;
+    console.log(userData.merbpsProgress)
+    if (userData.merbpsProgress === 100) count++;
+    if (userData.ebpmmProgress === 100) count++;
+    if (userData.cpdflmpProgress === 100) count++;
+    return count
+  };
+
   return (
     <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
       <p className="semibold text-xl text-center ">Badges</p>
-      <div className="mt-4 flex flex-wrap gap-y-4 justify-center">
-        {/* <Badge img="/badges/trophy.svg"/>
-        <Badge img={"/badges/friends.svg"}/>
-        <Badge img={"/badges/star.svg"}/>
-        <Badge img={"/badges/window-badge.svg"}/>
-        <Badge img={"/badges/simple-badge.svg"}/>
-        <Badge img={"/badges/winged-badge.svg"}/>
-        <Badge img={"/badges/circle-star-dark.svg"}/>
-        <Badge img={"/badges/badge.svg"}/>
-        <Badge img={"/badges/earth-badge.svg"}/>
-        <Badge img={"/badges/user-badge.svg"}/> */}
+      <div className="mt-8 flex flex-wrap gap-y-4 justify-center">
+        {userData && (
+          <>
+            <Badge img="/badges/trophy.svg" desc="Completed a course!" grayscale={countCoursesCompleted()  < 1}/>
+            <Badge
+              img={"/badges/friends.svg"}
+              desc={"Played 10 versus games with friends."}
+              grayscale={userData.versusPlayed < 10}
+            />
+            <Badge
+              img={"/badges/star.svg"}
+              desc={"Reached level 10!"}
+              grayscale={userData.experience / 100 < 9}
+            />
+            <Badge
+              img={"/badges/window-badge.svg"}
+              desc={"Create a notecard set!"}
+              grayscale={userData.notepacksMade < 1}
+            />
+            <Badge
+              img={"/badges/simple-badge.svg"}
+              desc={"Reached level 2!"}
+              grayscale={userData.experience / 100 < 1}
+            />
+            <Badge
+              img={"/badges/winged-badge.svg"}
+              desc="Won a versus game!"
+              grayscale={userData.versusWins < 1}
+            />
+            <Badge
+              img={"/badges/circle-star-dark.svg"}
+              desc={"Answered 50 Questions correctly!"}
+              grayscale={userData.problemsCorrect < 50}
+            />
+            <Badge
+              img={"/badges/badge.svg"}
+              desc={"Created Your Account!"}
+              grayscale={false}
+            />
+            <Badge
+              img={"/badges/earth-badge.svg"}
+              desc="Reached level 5!"
+              grayscale={userData.experience / 100 < 4}
+            />
+            <Badge
+              img={"/badges/user-badge.svg"}
+              desc={"Completed 2 courses"}
+              grayscale={countCoursesCompleted()  < 1}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 };
 export default Badges;
 
-
-
-
 type BadgeProps = {
-    img: string,
-    desc: string,
+  img: string;
+  desc: string;
+  grayscale: boolean;
 };
 
-const Badge:React.FC<BadgeProps> = ({img, desc}) => {
-    
-    return (
-        <div className="relative group  px-2 overflow-visible">
-            <img src={img} alt="" className="w-12 relative z-10"/>
-            <div className="absolute z-40 bg-main text-xs py-0.5 px-2 rounded-md -bottom-6 hidden group-hover:flex w-40 border border-black">{desc}</div>
-        </div>
-    )
-}
+const Badge: React.FC<BadgeProps> = ({ img, desc, grayscale }) => {
+  return (
+    <div className={`relative group  px-2 overflow-visible  `}>
+      <img
+        src={img}
+        alt=""
+        className={`w-12 ${grayscale ? "filter grayscale" : ""}`}
+      />
+      <div className="absolute z-40 bg-main text-xs py-0.5 px-2 rounded-md -bottom-6 hidden group-hover:flex w-[152px] border border-black ">
+        {desc}
+      </div>
+    </div>
+  );
+};
