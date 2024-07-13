@@ -1,3 +1,5 @@
+// FIX ONE DONE
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { firestore as db } from "../firebase/firebase";
@@ -58,6 +60,7 @@ const Game: React.FC = () => {
   const [playerAnswered, setPlayerAnswered] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [bothPlayersJoined, setBothPlayersJoined] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -85,7 +88,8 @@ const Game: React.FC = () => {
         !currentQuestion ||
         !gameId ||
         playerAnswered ||
-        playerNumber === null
+        playerNumber === null ||
+        !bothPlayersJoined
       ) {
         return;
       }
@@ -112,6 +116,7 @@ const Game: React.FC = () => {
       playerAnswered,
       playerNumber,
       selectedAnswer,
+      bothPlayersJoined,
     ]
   );
 
@@ -146,19 +151,15 @@ const Game: React.FC = () => {
             }
           }
 
-          if (data.players.length === 2 && !gameStarted) {
+          // Check if both players have joined
+          if (data.players.length === 2 && !bothPlayersJoined) {
+            setBothPlayersJoined(true);
             setGameStarted(true);
-
             // Start the timer for the first question
-            console.log("time start", data.timeStarted);
-            data.timeStarted = null;
-
-            if (data.timeStarted === null) {
-              const gameRef = doc(db, "games", gameId);
-              updateDoc(gameRef, {
-                timeStarted: Date.now(),
-              });
-            }
+            const gameRef = doc(db, "games", gameId);
+            updateDoc(gameRef, {
+              timeStarted: Date.now(),
+            });
           }
 
           if (data.currentQuestionIndex < QUESTIONS.length) {
@@ -263,40 +264,39 @@ const Game: React.FC = () => {
     );
 
     return () => unsubscribe();
-  }, [gameId, navigate, playerId, playerNumber, gameStarted]);
+  }, [
+    gameId,
+    navigate,
+    playerId,
+    playerNumber,
+    gameStarted,
+    bothPlayersJoined,
+  ]);
 
   // timer
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (
-      gameStarted &&
-      !gameOver &&
-      timeLeft > 0 &&
-      !playerAnswered &&
-      gameData?.timeStarted
-    ) {
-      timer = setTimeout(
-        () => setTimeLeft((prev) => Math.max(0, prev - 1)),
-        1000
-      );
-    } else if (
-      gameStarted &&
-      !gameOver &&
-      timeLeft === 0 &&
-      !playerAnswered &&
-      gameData?.timeStarted
-    ) {
-      handleSubmitAnswer(null); // Automatically submit null answer when time runs out
+    if (bothPlayersJoined && !gameOver && timeLeft > 0 && !playerAnswered) {
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timer);
+            handleSubmitAnswer(null); // Automatically submit null answer when time runs out
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
     }
-    return () => clearTimeout(timer);
+
+    return () => clearInterval(timer);
   }, [
-    timeLeft,
+    bothPlayersJoined,
     gameOver,
+    timeLeft,
     playerAnswered,
     handleSubmitAnswer,
-    gameStarted,
-    gameData?.timeStarted,
   ]);
 
   if (!gameData || !currentQuestion || playerNumber === null) {
