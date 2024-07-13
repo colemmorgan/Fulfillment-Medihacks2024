@@ -61,6 +61,12 @@ const Game: React.FC = () => {
 
   const gameId = new URLSearchParams(location.search).get("id");
 
+  const calculateTimeLeft = (startTime: number): number => {
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime) / 1000);
+    return Math.max(0, TIME_LIMIT - elapsed);
+  };
+
   const shuffledAnswers = useMemo(() => {
     if (!currentQuestion) return [];
     return [
@@ -145,15 +151,17 @@ const Game: React.FC = () => {
           setGameData(data);
           setScores(data.scores || {});
 
-          if (data.players.length === 2 && !gameStarted) {
+          if (data.players.length === 2 && data.timeStarted === null) {
+            const gameRef = doc(db, "games", gameId);
             setGameStarted(true);
+            updateDoc(gameRef, {
+              timeStarted: Date.now(),
+            });
+          }
 
-            if (data.timeStarted === null) {
-              const gameRef = doc(db, "games", gameId);
-              updateDoc(gameRef, {
-                timeStarted: Date.now(),
-              });
-            }
+          if (data.timeStarted) {
+            const calculatedTimeLeft = calculateTimeLeft(data.timeStarted);
+            setTimeLeft(calculatedTimeLeft);
           }
 
           if (data.currentQuestionIndex < QUESTIONS.length) {
@@ -255,32 +263,23 @@ const Game: React.FC = () => {
     return () => unsubscribe();
   }, [gameId, navigate, user, gameStarted]);
 
+  // Timer useEffect
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (
-      gameStarted &&
-      !gameOver &&
-      timeLeft > 0 &&
-      !playerAnswered &&
-      gameData?.timeStarted
-    ) {
-      timer = setTimeout(
-        () => setTimeLeft((prev) => Math.max(0, prev - 1)),
-        1000
-      );
-    } else if (
-      gameStarted &&
-      !gameOver &&
-      timeLeft === 0 &&
-      !playerAnswered &&
-      gameData?.timeStarted
-    ) {
-      handleSubmitAnswer(null); // Automatically submit null answer when time runs out
+    if (gameStarted && !gameOver && gameData?.timeStarted) {
+      timer = setInterval(() => {
+        const calculatedTimeLeft = calculateTimeLeft(gameData.timeStarted);
+        setTimeLeft(calculatedTimeLeft);
+
+        if (calculatedTimeLeft === 0 && !playerAnswered) {
+          handleSubmitAnswer(null);
+        }
+      }, 100); // Update every 100ms for smoother countdown
     }
-    return () => clearTimeout(timer);
+
+    return () => clearInterval(timer);
   }, [
-    timeLeft,
     gameOver,
     playerAnswered,
     handleSubmitAnswer,
