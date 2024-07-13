@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { firestore as db, auth } from "../firebase/firebase";
 import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import grantXP from "../firebase/transactions/GrantXp";
 
 interface Question {
   id: string;
@@ -50,6 +51,8 @@ const Game: React.FC = () => {
   const [playerAnswered, setPlayerAnswered] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+
+  const [xpGranted, setXpGranted] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -254,6 +257,23 @@ const Game: React.FC = () => {
     gameStarted,
     gameData?.timeStarted,
   ]);
+
+  useEffect(() => {
+    if (gameOver && !xpGranted && user) {
+      let winner;
+      if (Object.values(scores).every((score, _, arr) => score === arr[0])) {
+        winner = null; // It's a tie
+      } else {
+        winner = Object.entries(scores).reduce((a, b) =>
+          a[1] > b[1] ? a : b
+        )[0];
+      }
+
+      const xpValue = winner === user.uid ? 50 : 15;
+      grantXP(user.uid, "versus", xpValue);
+      setXpGranted(true);
+    }
+  }, [gameOver, xpGranted, user, scores]);
 
   if (!gameData || !currentQuestion || !user) {
     return <div>Loading...</div>;
