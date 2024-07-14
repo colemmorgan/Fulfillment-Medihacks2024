@@ -97,9 +97,8 @@ const NewGame: React.FC = () => {
           gameStartTime: Date.now(),
         });
       }
+      setIsReady(true);
     }
-
-    setIsReady(true);
   };
 
   useEffect(() => {

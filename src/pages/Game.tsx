@@ -17,7 +17,7 @@ interface Question {
   difficulty: string;
 }
 
-const TIME_LIMIT = 25;
+const TIME_LIMIT = 10;
 
 const Game: React.FC = () => {
   // get questions
@@ -150,12 +150,14 @@ const Game: React.FC = () => {
           setGameData(data);
           setScores(data.scores || {});
 
-          if (data.players.length === 2 && data.timeStarted === null) {
+          if (data.players.length === 2) {
             const gameRef = doc(db, "games", gameId);
             setGameStarted(true);
-            updateDoc(gameRef, {
-              timeStarted: Date.now(),
-            });
+            if (data.timeStarted === null) {
+              updateDoc(gameRef, {
+                timeStarted: Date.now(),
+              });
+            }
           }
 
           if (data.timeStarted) {
@@ -232,6 +234,8 @@ const Game: React.FC = () => {
                 })
                   .then(() => {
                     console.log("Moving to next question:", nextQuestionIndex);
+                    setSelectedAnswer(null);
+
                     return updateDoc(gameRef, { timeStarted: Date.now() });
                   })
                   .catch((error) => {
