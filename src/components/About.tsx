@@ -18,15 +18,15 @@ const About: React.FC<AboutProps> = () => {
           Earn Micro-Credentials, XP, and More!
         </h4>
       </Reveal>
-      <div className="flex max-w-[1220px] w-full mx-auto gap-4 mt-16 max-sm:grid max-sm:ml-4">
-        <div className="w-1/3 px-4 max-sm:w-10/12">
+      <div className="flex flex-wrap justify-center max-w-[1280px] w-full mx-auto gap-12 md:gap-6 mt-16 max-sm:grid max-sm:ml-4">
+        <div className="w-[400px] px-4">
           <StaggeredFadeUp index={0}>
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center">
               <p className="flex gap-3 text-2xl items-center ">
-                <span className="text-main text-4xl pb-1 max-sm:hidden">
+                <span className="text-main text-4xl pb-1 ">
                   <PiNumberCircleOneFill />
                 </span>
-                <span className="max-sm:text-secondary font-semibold">
+                <span className="semibold">
                   Pick a Game Mode
                 </span>
               </p>
@@ -54,14 +54,14 @@ const About: React.FC<AboutProps> = () => {
           </StaggeredFadeUp>
         </div>
 
-        <div className="w-1/3 px-4 max-sm:w-10/12">
+        <div className="w-[400px] px-4">
           <StaggeredFadeUp index={2}>
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center">
               <p className="flex gap-3 text-2xl items-center">
-                <span className="text-main text-4xl pb-1 max-sm:hidden">
+                <span className="text-main text-4xl pb-1 ">
                   <PiNumberCircleTwoFill />
                 </span>
-                <span className="max-sm:text-secondary font-semibold">
+                <span className=" semibold ">
                   Earn Experience
                 </span>
               </p>
@@ -74,14 +74,14 @@ const About: React.FC<AboutProps> = () => {
           </StaggeredFadeUp>
         </div>
 
-        <div className="w-1/3 px-4 max-sm:w-10/12">
+        <div className="w-[400px] px-4 ">
           <StaggeredFadeUp index={4}>
             <div className="flex flex-col items-center">
               <p className="flex gap-3 text-2xl items-center justify-center">
-                <span className="text-main text-4xl pb-1 max-sm:hidden">
+                <span className="text-main text-4xl pb-1 ">
                   <PiNumberCircleThreeFill />
                 </span>
-                <span className="max-sm:text-secondary font-semibold">
+                <span className="semibold">
                   Gain Badges and Levels!
                 </span>
               </p>

@@ -7,8 +7,8 @@ type FooterProps = {};
 const Footer: React.FC<FooterProps> = () => {
   return (
     <footer className="bg-black text-white py-28">
-      <div className=" px-6 flex justify-center mx-auto max-sm:grid">
-        <div className="pr-16 sm:border-r max-sm:border-b border-borderColor max-sm:mb-6 max-sm:pb-8">
+      <div className=" px-6 flex flex-col lg:flex-row justify-center items-center mx-auto max-sm:grid">
+        <div className="lg:pr-16 lg:border-r  border-borderColor max-sm:mb-6 max-sm:pb-8 mb-12 lg:mb-0">
           <p className="text-xl semibold">Fulfillment</p>
           <a
             href="https://github.com/colemmorgan/Medihacks2024"
@@ -26,7 +26,7 @@ const Footer: React.FC<FooterProps> = () => {
             Commercial Rights Reserved.
           </p>
         </div>
-        <div className="ml-16 max-sm:ml-1 flex max-sm:grid max-sm:gap-y-4">
+        <div className="ml-16 max-sm:ml-1 flex max-sm:grid max-sm:gap-y-4 border-t border-borderColor pt-4 lg:border-t-0">
           <div className="w-36 flex flex-col">
             <p>Features</p>
             <div className="mt-2 text-sm flex flex-col gap-2 text-[#D1D1D1]">

@@ -90,7 +90,7 @@ export const Signup = () => {
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 max-sm:gap-14 items-center px-4 pt-20 max-sm:grid">
+      <div className="flex max-w-[1200px] mx-auto gap-32 max-lg:gap-14 items-center px-4 pt-8 lg:pt-20 max-lg:flex-col-reverse">
         <div className="relative flex flex-col items-center">
           <p className="mb-12 semibold text-4xl text-center sm:pl-16">
             Nice to meet you!
@@ -98,7 +98,7 @@ export const Signup = () => {
           <img
             src="/images/signup.svg"
             alt=""
-            className="max-w-[475px] max-sm:w-72"
+            className="max-w-[475px] max-lg:w-72"
           />
         </div>
         <div className=" max-w-[450px] w-full flex flex-col items-center">
