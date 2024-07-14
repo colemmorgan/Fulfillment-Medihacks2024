@@ -21,7 +21,7 @@ const StaggeredFadeUp: React.FC<StaggeredFadeUpProps> = ({
   }, [isInView, mainControls]);
 
   return (
-    <motion.li
+    <motion.div
       ref={ref}
       variants={{
         hidden: { opacity: 0, y: 40 },
@@ -34,10 +34,10 @@ const StaggeredFadeUp: React.FC<StaggeredFadeUpProps> = ({
         ease: "easeOut",
         delay: 0.1 * index,
       }}
-      className="list-none"
+     
     >
       {children}
-    </motion.li>
+    </motion.div>
   );
 };
 export default StaggeredFadeUp;

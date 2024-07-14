@@ -54,7 +54,7 @@ const Courses: React.FC<CoursesProps> = () => {
       <LandingNav />
       <div className="max-w-[1220px] mt-16 mx-auto px-4">
         <h1 className="text-center bold text-[42px]">Courses</h1>
-        <ul className="flex gap-6 flex-wrap mt-12">
+        <ul className="flex justify-center gap-6 flex-wrap mt-12">
           {courses.map((course, index) => (
             <StaggeredFadeUp index={index} key={course.title}>
               <Course

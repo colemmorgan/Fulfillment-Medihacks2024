@@ -89,8 +89,10 @@ const CourseNav: React.FC<CourseNavProps> = () => {
       <Link to={"/"}>
         <li>Home</li>
       </Link>
-      <li>Dashboard</li>
-      <li>Courses</li>
+      <div className="gap-6 hidden md:flex">
+      <Link to={"/dashboard"}><li>Dashboard</li></Link>
+      <Link to={"/courses"}><li>Courses</li></Link>
+      </div>
     </ul>
     <div className="flex items-center">
       <span className="mr-3 text-sm rounded-full border border-main h-12 w-12 flex items-center justify-center pt-0.5">

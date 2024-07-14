@@ -105,8 +105,8 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
     <>
       <LandingNav />
       <div className="max-w-[1090px] mx-auto mt-12 pb-20 min-h-screen">
-        <h3 className="text-center text-3xl semibold">{notepack.title}</h3>
-        <div className="w-full flex justify-center max-w-[700px] mx-auto overflow-hidden pt-12 pb-12 overflow-y-hidden h-[448px]">
+        <h3 className="text-center text-lg md:text-2xl lg:text-3xl semibold px-2">{notepack.title}</h3>
+        <div className="w-full flex justify-center max-w-[700px] mx-auto overflow-hidden pt-12 pb-12 overflow-y-hidden h-[448px] px-2">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentNotecardIndex}
@@ -119,7 +119,7 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 },
               }}
-              className="absolute max-w-[650px] w-full h-[350px]"
+              className="absolute max-w-[650px] w-full h-[350px] px-4"
             >
               <CardFlip
                 question={notepack?.cards[currentNotecardIndex].question}
@@ -143,7 +143,7 @@ const StudyNotepack: React.FC<StudyNotepackProps> = () => {
         </div>
         <div className="mt-20">
             <p className="text-center text-3xl">Keep Studying</p>
-            <ul className="flex gap-5 flex-wrap mt-8">
+            <ul className="flex justify-center gap-5 flex-wrap mt-8">
                 {notepacks?.slice(0,3).map((pack, index) => (
                    <motion.li
                    key={pack.id}

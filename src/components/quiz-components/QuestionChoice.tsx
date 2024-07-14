@@ -46,7 +46,7 @@ const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value, index }) => {
   return (
     <div
       onClick={handleClick}
-      className={`relative max-w-[900px] w-full py-5 px-8 border border-borderColor flex items-center rounded-md cursor-pointer
+      className={`relative max-w-[900px] w-full py-4 md:py-5 px-5 md:px-7 lg:px-8 border border-borderColor flex items-center rounded-md cursor-pointer
         ${
           revealAnswers
             ? value === currentProblem?.correctAnswer
@@ -62,7 +62,7 @@ const QuestionChoice: React.FC<QuestionChoiceProps> = ({ value, index }) => {
       }`}
     >
       <AnswerBubble letter={letterChoice} value={value} />
-      <span>{value}</span>
+      <span className="text-sm sm:text-base">{value}</span>
     </div>
   );
 };

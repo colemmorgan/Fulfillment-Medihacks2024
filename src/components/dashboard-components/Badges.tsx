@@ -10,7 +10,6 @@ const Badges: React.FC<BadgesProps> = () => {
   const countCoursesCompleted = (): number => {
     if (!userData) return 0;
     let count: number = 0;
-    console.log(userData.merbpsProgress);
     if (userData.merbpsProgress === 100) count++;
     if (userData.ebpmmProgress === 100) count++;
     if (userData.cpdflmpProgress === 100) count++;

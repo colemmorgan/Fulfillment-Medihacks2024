@@ -110,28 +110,28 @@ const NotepackMaker: React.FC<NotepackMakerProps> = () => {
           <span>Back to notecards</span>
         </Link>
         <button
-          className="bg-opaque px-6 py-1.5 rounded-md"
+          className="bg-opaque px-4 text-sm sm:text-base sm:px-6 py-1.5 rounded-md"
           onClick={() => setShowPublishConfirmation(true)}
         >
           Publish Set
         </button>
       </nav>
-      <div className="max-w-[1000px] w-full mx-auto mt-10 pb-24">
+      <div className="max-w-[1000px] w-full mx-auto mt-10 pb-24 px-4">
         <div className="flex items-center  gap-3">
-          <p className="text-xl">Name your notepack:</p>
+          <p className="text-base md:text-xl">Name your notepack:</p>
           <input
             type="text"
-            className="bg-offWhite border border-borderColor rounded-md py-1 px-2 w-60 outline-none"
+            className="bg-offWhite border border-borderColor rounded-md py-1 px-2 md:w-60 outline-none"
             value={notepackTitle}
             onChange={(e) => setNotepackTitle(e.target.value)}
           />
         </div>
-        <div className="max-w-[1000px] w-full bg-offWhite  mx-auto rounded-xl border border-borderColor mt-8 py-6 px-12">
-          <p className="text-lg">
+        <div className="max-w-[1000px] w-full bg-offWhite  mx-auto rounded-xl border border-borderColor mt-8 py-6 px-6 md:px-12">
+          <p className="text-base sm:text-lg">
             Enter your question and answer then hit create!
           </p>
           <form className="" onSubmit={(e) => createNotecard(e)}>
-            <div className="flex flex-col mt-3">
+            <div className="flex flex-col mt-3 text-sm sm:text-base">
               <label htmlFor="">Question:</label>
               <textarea
                 name=""
@@ -151,7 +151,7 @@ const NotepackMaker: React.FC<NotepackMakerProps> = () => {
               <div className="mt-6 flex justify-end">
                 <button
                   type="submit"
-                  className="bg-opaque py-1.5 px-6 rounded-md"
+                  className="bg-opaque py-1.5 text-sm px-4 sm:text-base sm:px-6 rounded-md"
                 >
                   Create Card
                 </button>

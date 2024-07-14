@@ -123,7 +123,7 @@ const Quiz: React.FC = () => {
         <>
             <CourseNav />
             <div className="max-w-[924px] px-3 mx-auto mt-12">
-                <p className="semibold text-3xl">
+                <p className="semibold text-2xl md:text-3xl">
                     {currentProblem && currentProblem.question}
                 </p>
                 <ul className="flex flex-col items-center gap-4 mt-10">
@@ -133,7 +133,7 @@ const Quiz: React.FC = () => {
                 </ul>
                 <div className="flex justify-between items-center mt-12 bg-[#f2f4f5] py-3 px-4 border border-borderColor rounded-md">
                     <button
-                        className={`px-2 text-lg ${
+                        className={`px-2  md:text-lg ${
                             revealAnswers ? "opacity-0" : "cursor-pointer"
                         }`}
                         onClick={skipProblem}
@@ -141,7 +141,7 @@ const Quiz: React.FC = () => {
                         Skip Problem
                     </button>
                     <button
-                        className={`bg-opaque px-6 py-2.5 rounded-md ${
+                        className={`bg-opaque px-4 text-sm md:text-base md:px-6 py-2.5 rounded-md ${
                             revealAnswers ? "" : "opacity-0 cursor-not-allowed"
                         }`}
                         onClick={nextProblem}

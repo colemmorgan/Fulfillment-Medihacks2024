@@ -27,7 +27,7 @@ const GameModes: React.FC<GameModesProps> = () => {
       </div>
 
       <SmoothOpen isHidden={hideTab}>
-        <div className="flex my-3 gap-4">
+        <div className="flex flex-wrap my-3 gap-4">
           <div className="p-6 pb-4 border border-borderColor w-96 h-64 rounded-md flex flex-col justify-between bg-white">
             <p className="semibold text-xl text-center">Courses</p>
             <p className="leading-relaxed">

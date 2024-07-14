@@ -46,7 +46,7 @@ const Profile: React.FC<ProfileProps> = () => {
 
       {userData && (
         <SmoothOpen isHidden={hideTab}>
-          <ul className="flex my-3 gap-4">
+          <ul className="flex flex-wrap my-3 gap-4">
             <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white flex flex-col justify-between">
               <div className="">
                 <p className="text-xl semibold">

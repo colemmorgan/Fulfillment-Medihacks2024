@@ -9,8 +9,12 @@ import HeroImg from "../components/ui/HeroImg";
 import FadeUp from "../components/framer-components/FadeUp";
 import Footer from "../components/Footer";
 import About from "../components/About";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
 
 export const Home = () => {
+
+  const [user] = useAuthState(auth)
   return (
     <>
       <LandingNav />
@@ -36,9 +40,9 @@ export const Home = () => {
                 Courses
               </button>
             </Link>
-            <Link to={"/login"}>
+            <Link to={`${user ? "/versus" : "/login"}`}>
               <button className="semibold text-lg bg-opaque pt-2 pb-1.5 w-36 rounded-full">
-                Login
+              {`${user ? "Versus" : "Login"}`}
               </button>
             </Link>
           </div>
@@ -46,14 +50,14 @@ export const Home = () => {
           <HeroImg />
         </div>
       </div>
-      <div className=" bg-black -mt-28 text-white flex pt-52">
+      <div className=" bg-black -mt-28 text-white flex  pt-24 lg:pt-52">
         <div className="max-w-[1220px] w-full mx-auto flex flex-col items-center">
           <Reveal>
             <h2 className="text-5xl semibold text-center mx-auto">
               Learn Your Way
             </h2>
           </Reveal>
-          <div className="flex mt-16 w-full justify-between">
+          <div className="flex flex-col items-center gap-16 mt-12 lg:mt-16 w-full xl:justify-between xl:flex-row">
             <div className="px-4 flex flex-col max-w-[580px] items-center">
               <Reveal>
                 <h4 className="text-3xl mb-6 text-center">
