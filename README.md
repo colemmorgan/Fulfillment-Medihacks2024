@@ -2,7 +2,7 @@
 
 ![App Screenshot](./public/images/app.png)
 
-Welcome to Fulfillment! This web app is designed for aspiring and professional doctors to enhance and refresh their medical knowledge in a fun, intuitive, and interactive way.
+Welcome to Fulfillment! This web app is designed to revolutionize continuous medical education through a micro-credentialing system that incentivizes ongoing learning and practice for front-line medical professionals.
 
 ## Table of Contents
 
@@ -18,9 +18,10 @@ Welcome to Fulfillment! This web app is designed for aspiring and professional d
 
 ## Introduction
 
-Fulfillment is a web app designed for aspiring and professional doctors to enhance and refresh their medical knowledge in a fun, intuitive, and interactive way. This platform centralizes all the scattered medical reference materials into one cohesive space, providing a seamless learning experience. With features like interactive courses, notecards, and trivia games, Fulfillment transforms the traditional, often monotonous, methods of studying into an engaging journey.
+Fulfillment addresses the critical need for continuous, bite-sized learning in medicine. Our platform transforms traditional, often outdated medical education models into an agile, responsive system that evolves with the rapidly changing medical field. By offering micro-credentials, we encourage medical professionals to engage in frequent, focused learning that can be immediately applied to their practice.
 
-Doctors and medical professionals of all ages can benefit from Fulfillment’s structured and user-friendly approach. Whether you are an aspiring doctor looking to build your knowledge or a seasoned professional aiming to stay updated, Fulfillment offers tools and resources tailored to your needs. The addition of gamification elements such as badges and an XP system ensures that learning remains motivating and rewarding, helping you track your progress and achieve your educational goals.
+Our system is designed to combat medical errors - one of the leading causes of death and poor health outcomes - by ensuring that medical professionals' skills and knowledge remain current with the latest evidence-based practices and technologies. Fulfillment makes continuous professional development accessible, engaging, and directly relevant to daily medical practice.
+
 
 ## Features
 
