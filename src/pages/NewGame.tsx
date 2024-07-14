@@ -145,7 +145,7 @@ const NewGame: React.FC = () => {
       {!isReady ? (
         <button
           onClick={handleReady}
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          className="bg-main hover:bg-opaque py-2 px-4 rounded transition-all text-[#000]"
         >
           I'm Ready
         </button>

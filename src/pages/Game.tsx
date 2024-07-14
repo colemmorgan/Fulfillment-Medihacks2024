@@ -30,7 +30,9 @@ const Game: React.FC = () => {
         if (fetchedQuestions && fetchedQuestions.questions.length > 0) {
           setQuestions(fetchedQuestions.questions);
         }
-      } catch (err) {}
+      } catch (err) {
+        // pass
+      }
     };
     fetchQuestionsData();
   }, []);
@@ -49,6 +51,7 @@ const Game: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   const [xpGranted, setXpGranted] = useState(false);
+  const [versusIncremented, setVersusIncremented] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
 
   const location = useLocation();
@@ -257,7 +260,7 @@ const Game: React.FC = () => {
     );
 
     return () => unsubscribe();
-  }, [gameId, navigate, user, gameStarted]);
+  }, [gameId, navigate, user, gameStarted, questions]);
 
   // Timer useEffect
   useEffect(() => {
@@ -275,10 +278,16 @@ const Game: React.FC = () => {
     }
 
     return () => clearInterval(timer);
-  }, [gameOver, playerAnswered, handleSubmitAnswer]);
+  }, [
+    gameOver,
+    playerAnswered,
+    handleSubmitAnswer,
+    gameStarted,
+    gameData?.timeStarted,
+  ]);
 
   useEffect(() => {
-    if (gameOver && !xpGranted && user) {
+    if (gameOver && !xpGranted && !versusIncremented && user) {
       let winner;
       if (Object.values(scores).every((score, _, arr) => score === arr[0])) {
         winner = null; // It's a tie
@@ -287,12 +296,15 @@ const Game: React.FC = () => {
           a[1] > b[1] ? a : b
         )[0];
       }
-      // winner === user.uid ? incrementVersusStats(user.uid, true) : incrementVersusStats(user.uid, false); this is making xp be given out twice for some reason 
+
+      incrementVersusStats(user.uid, winner === user.uid); // this is making xp be given out twice for some reason
+      setVersusIncremented(true);
+
       const xpValue = winner === user.uid ? 50 : 15;
       grantXP(user.uid, "versus", xpValue);
       setXpGranted(true);
     }
-  }, [gameOver, user, scores]);
+  }, [gameOver, user, scores, versusIncremented, xpGranted]);
 
   if (!gameData || !currentQuestion || !user) {
     return <div>Loading...</div>;
@@ -337,7 +349,21 @@ const Game: React.FC = () => {
       <h1 className="text-4xl font-bold mb-6">Versus Mode</h1>
       {/* <p className="text-xl mb-4">You are {user.uid}</p> */}
       {!gameStarted ? (
-        <p>Waiting for other player to join...</p>
+        <div className="grid place-items-center gap-y-3">
+          <p>Waiting for other player to join...</p>
+          <span className="text-balance text-center text-gray-600">
+            Seeing something wrong? Click on the button below to head back to
+            trivia page and start a new game
+          </span>
+          <div>
+            <button
+              className="bg-main hover:bg-opaque py-2 px-4 rounded transition-all text-[#000]"
+              onClick={() => navigate("/trivia")}
+            >
+              Go back to trivia page
+            </button>
+          </div>
+        </div>
       ) : (
         <>
           <p className="text-xl mb-4">
