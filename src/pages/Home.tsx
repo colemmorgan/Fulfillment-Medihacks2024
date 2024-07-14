@@ -41,7 +41,7 @@ export const Home = () => {
                   Courses
                 </button>
               </Link>
-              <Link to={`${user ? "/versus" : "/login"}`}>
+              <Link to={`${user ? "/trivia" : "/login"}`}>
                 <button className="semibold text-lg bg-opaque pt-2 pb-1.5 w-36 rounded-full">
                   {`${user ? "Versus" : "Login"}`}
                 </button>

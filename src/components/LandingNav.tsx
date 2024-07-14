@@ -30,7 +30,10 @@ export const LandingNav = () => {
       <nav className=" h-20 text-black relative">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between h-full px-6 relative">
           <p className="semibold text-xl">Fulfillment</p>
-          <div className="text-4xl cursor-pointer lg:hidden" onClick={() => setShowMobileNav(true)}>
+          <div
+            className="text-4xl cursor-pointer lg:hidden"
+            onClick={() => setShowMobileNav(true)}
+          >
             <IoMdMenu />
           </div>
           <div className="hidden lg:block">
@@ -72,19 +75,26 @@ export const LandingNav = () => {
           </div>
         </div>
       </nav>
-      {showMobileNav && <div className="fixed inset-0 bg-white z-50 ">
-        <div className="h-full w-full relative ">
-          <span className="absolute right-4 top-4 text-5xl cursor-pointer" onClick={() => setShowMobileNav(false)}><IoIosCloseCircle/></span>
-          <ul className="h-full w-full flex flex-col justify-center gap-10 semibold items-center text-3xl">
-            <Link to={"/dashboard"}>Dashboard</Link>
-            <Link to={"/notepacks"}>Notecards</Link>
-            <Link to={"/copurses"}>Courses</Link>
-            <Link to={"/trivia"}>Versus</Link>
-            <Link to={"/login"}>Login</Link>
-            <Link to={"/signup"}>Signup</Link>
-          </ul>
+      {showMobileNav && (
+        <div className="fixed inset-0 bg-white z-50 ">
+          <div className="h-full w-full relative ">
+            <span
+              className="absolute right-4 top-4 text-5xl cursor-pointer"
+              onClick={() => setShowMobileNav(false)}
+            >
+              <IoIosCloseCircle />
+            </span>
+            <ul className="h-full w-full flex flex-col justify-center gap-10 semibold items-center text-3xl">
+              <Link to={"/dashboard"}>Dashboard</Link>
+              <Link to={"/notepacks"}>Notecards</Link>
+              <Link to={"/courses"}>Courses</Link>
+              <Link to={"/trivia"}>Versus</Link>
+              <Link to={"/login"}>Login</Link>
+              <Link to={"/signup"}>Signup</Link>
+            </ul>
+          </div>
         </div>
-        </div>}
+      )}
     </>
   );
 };

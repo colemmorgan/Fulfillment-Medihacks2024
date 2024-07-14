@@ -53,8 +53,8 @@ export const Signup = () => {
         inputs.password
       );
       if (!newUser) return;
-      const userData = createUser(newUser,inputs)
-      await setDoc(doc(firestore,"users",newUser.user.uid), userData)
+      const userData = createUser(newUser, inputs);
+      await setDoc(doc(firestore, "users", newUser.user.uid), userData);
       navigate("/");
     } catch (error: any) {
       toast.dismiss("loadingToast");
@@ -90,12 +90,16 @@ export const Signup = () => {
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4 pt-20">
-        <div className="relative flex flex-col">
-          <p className="mb-12 semibold text-4xl text-center pl-16">
+      <div className="flex max-w-[1200px] mx-auto gap-32 max-sm:gap-14 items-center px-4 pt-20 max-sm:grid">
+        <div className="relative flex flex-col items-center">
+          <p className="mb-12 semibold text-4xl text-center sm:pl-16">
             Nice to meet you!
           </p>
-          <img src="/images/signup.svg" alt="" className="max-w-[475px]" />
+          <img
+            src="/images/signup.svg"
+            alt=""
+            className="max-w-[475px] max-sm:w-72"
+          />
         </div>
         <div className=" max-w-[450px] w-full flex flex-col items-center">
           <span className="text-main text-5xl">
