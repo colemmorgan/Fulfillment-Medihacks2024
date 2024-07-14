@@ -7,15 +7,14 @@ type BadgesProps = {};
 const Badges: React.FC<BadgesProps> = () => {
   const [userData] = useRecoilState(userDataAtom);
 
-
   const countCoursesCompleted = (): number => {
     if (!userData) return 0;
     let count: number = 0;
-    console.log(userData.merbpsProgress)
+    console.log(userData.merbpsProgress);
     if (userData.merbpsProgress === 100) count++;
     if (userData.ebpmmProgress === 100) count++;
     if (userData.cpdflmpProgress === 100) count++;
-    return count
+    return count;
   };
 
   return (
@@ -24,7 +23,11 @@ const Badges: React.FC<BadgesProps> = () => {
       <div className="mt-8 flex flex-wrap gap-y-4 justify-center">
         {userData && (
           <>
-            <Badge img="/badges/trophy.svg" desc="Completed a course!" grayscale={countCoursesCompleted()  < 1}/>
+            <Badge
+              img="/badges/trophy.svg"
+              desc="Completed a course!"
+              grayscale={countCoursesCompleted() < 1}
+            />
             <Badge
               img={"/badges/friends.svg"}
               desc={"Played 10 versus games with friends."}
@@ -68,7 +71,7 @@ const Badges: React.FC<BadgesProps> = () => {
             <Badge
               img={"/badges/user-badge.svg"}
               desc={"Completed 2 courses"}
-              grayscale={countCoursesCompleted()  < 1}
+              grayscale={countCoursesCompleted() < 1}
             />
           </>
         )}
@@ -90,10 +93,12 @@ const Badge: React.FC<BadgeProps> = ({ img, desc, grayscale }) => {
       <img
         src={img}
         alt=""
-        className={`w-12 ${grayscale ? "filter grayscale" : ""}`}
+        className={`w-12 ${grayscale ? "filter opacity-60 grayscale" : ""}`}
       />
-      <div className="absolute z-40 bg-main text-xs py-0.5 px-2 rounded-md -bottom-6 hidden group-hover:flex w-[152px] border border-black ">
-        {desc}
+      <div
+        className={`absolute z-50 bg-main/60 backdrop-blur-md text-xs py-1 px-2 rounded-md -bottom-6 left-4 hidden group-hover:flex w-[152px] border border-indigo-400`}
+      >
+        {desc} {grayscale && "(not earned yet)"}
       </div>
     </div>
   );

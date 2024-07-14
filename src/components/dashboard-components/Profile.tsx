@@ -72,19 +72,35 @@ const Profile: React.FC<ProfileProps> = () => {
               </div>
             </div>
 
-            <Badges/>
+            <Badges />
 
             <div className="p-6 border border-borderColor w-96 h-64 rounded-md bg-white">
-              <p className="semibold text-xl text-center">
-                Experience Breakdown
-              </p>
-              <div className="flex flex-col gap-1">
-                <p className="mt-4">
-                  Lifetime experience: {userData.experience}
-                </p>
-                <p>Experience from courses: {userData.courseXP}</p>
-                <p>Experience from Notecards: {userData.notecardXP}</p>
-                <p>Experience from versus: {userData.versusXP}</p>
+              <p className="semibold text-xl text-center">XP Breakdown</p>
+              <div className="flex flex-col gap-1 mt-4">
+                <div className="flex justify-between">
+                  <div>Lifetime XP</div>{" "}
+                  <div className="text-secondary font-semibold">
+                    {userData.experience}
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div>XP from Courses</div>{" "}
+                  <div className="text-secondary font-semibold">
+                    {userData.courseXP}
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div>XP from Notecards</div>{" "}
+                  <div className="text-secondary font-semibold">
+                    {userData.notecardXP}
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div>XP from Versus</div>{" "}
+                  <div className="text-secondary font-semibold">
+                    {userData.versusXP}
+                  </div>
+                </div>
               </div>
             </div>
           </ul>

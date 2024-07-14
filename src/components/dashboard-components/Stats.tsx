@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import SmoothOpen from '../framer-components/SmoothOpen';
-import { FaChevronUp } from 'react-icons/fa';
-import { userDataAtom } from '../../atoms/user-data-atoms';
-import { useRecoilState } from 'recoil';
-import CircleProgress from '../ui/CircleProgress';
+import React, { useState } from "react";
+import SmoothOpen from "../framer-components/SmoothOpen";
+import { FaChevronUp } from "react-icons/fa";
+import { userDataAtom } from "../../atoms/user-data-atoms";
+import { useRecoilState } from "recoil";
+import CircleProgress from "../ui/CircleProgress";
 import { IoIosStats } from "react-icons/io";
-
 
 type StatsProps = {};
 
@@ -20,8 +19,10 @@ const Stats: React.FC<StatsProps> = () => {
     <div className="mt-8 border-b border-borderColor pb-4">
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
-            <span className='text-2xl pb-1 text-main'><IoIosStats/></span>
-        <p className="text-2xl">Stats</p>
+          <span className="text-2xl pb-1 text-main">
+            <IoIosStats />
+          </span>
+          <p className="text-2xl">Stats</p>
         </div>
         <p
           className="flex text-[#888888] items-center gap-3 cursor-pointer text-sm"
@@ -38,7 +39,7 @@ const Stats: React.FC<StatsProps> = () => {
         <div className="flex my-3 flex-wrap gap-4">
           <div className="p-6 border border-borderColor w-96 h-64 rounded-md flex flex-col justify-between items-center bg-white">
             <p className="text-lg">Question Stats</p>
-            <CircleProgress percentage={percentage} />
+            <CircleProgress percentage={percentage || 0} />
             <div className="flex gap-4">
               <p>Correct: {userData?.problemsCorrect}</p>
               <p>Attempted: {userData?.problemsAttempted}</p>
