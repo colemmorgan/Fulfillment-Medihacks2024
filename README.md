@@ -1,5 +1,7 @@
 # Fulfillment: Your Comprehensive Medical Learning Companion
 
+![App Screenshot](./public/images/app.png)
+
 Welcome to Fulfillment! This web app is designed for aspiring and professional doctors to enhance and refresh their medical knowledge in a fun, intuitive, and interactive way.
 
 ## Table of Contents
