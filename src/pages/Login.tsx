@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 max-sm:gap-14 items-center px-4 pt-24 max-sm:grid">
+      <div className="flex max-w-[1200px] mx-auto gap-32 max-lg:gap-14 items-center px-4 pt-24 max-lg:flex-col-reverse">
         <div className="relative flex flex-col items-center ">
           <p className="mb-12 semibold text-4xl text-center">Welcome Back!</p>
           <img

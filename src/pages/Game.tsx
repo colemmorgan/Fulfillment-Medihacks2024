@@ -28,6 +28,7 @@ const Game: React.FC = () => {
       try {
         const fetchedQuestions = await fetchQuestions("trivia");
         if (fetchedQuestions && fetchedQuestions.questions.length > 0) {
+          // const scrambled = shuffleArray(fetchedQuestions.questions)
           setQuestions(fetchedQuestions.questions);
         }
       } catch (err) {
@@ -42,7 +43,7 @@ const Game: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
-  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [_, setSubmittedAnswer] = useState<string | null>(null);
   const [scores, setScores] = useState<Record<string, number>>({});
 
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
@@ -73,6 +74,10 @@ const Game: React.FC = () => {
       currentQuestion.correctAnswer,
     ].sort(() => Math.random() - 0.5);
   }, [currentQuestion]);
+
+  const shuffleArray = (array: Question[]): Question[] => {
+    return array.sort(() => Math.random() - 0.5);
+  };
 
   const memoizedScores = useMemo(() => {
     if (!gameData || !user) return null;
@@ -296,24 +301,28 @@ const Game: React.FC = () => {
       if (Object.values(scores).every((score, _, arr) => score === arr[0])) {
         winner = null; // It's a tie
       } else {
-        winner = Object.entries(scores).reduce((a, b) =>
-          a[1] > b[1] ? a : b
-        )[0];
+        winner = Object.entries(scores).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
       }
-
-      incrementVersusStats(user.uid, winner === user.uid); // this is making xp be given out twice for some reason
-      setVersusIncremented(true);
-
-      console.log("[game:trigger] versus increment");
-
-      const xpValue = winner === user.uid ? 50 : 15;
-      grantXP(user.uid, "versus", xpValue);
-      setXpGranted(true);
-
-      console.log(`[game:trigger] xp increment (${xpValue})`);
+  
+      const handleXPAndStats = async () => {
+        try {
+          await incrementVersusStats(user.uid, winner === user.uid);
+          setVersusIncremented(true);
+          console.log("[game:trigger] versus increment");
+  
+          const xpValue = winner === user.uid ? 50 : 15;
+          await grantXP(user.uid, "versus", xpValue);
+          setXpGranted(true);
+          console.log(`[game:trigger] xp increment (${xpValue})`);
+        } catch (error) {
+          console.error("Error updating XP and stats:", error);
+        }
+      };
+  
+      handleXPAndStats();
     }
-  }, [gameOver, user, scores, versusIncremented, xpGranted]);
-
+  }, [gameOver]);
+  
   if (!gameData || !currentQuestion || !user) {
     return <div>Loading...</div>;
   }

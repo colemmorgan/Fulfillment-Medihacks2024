@@ -7,7 +7,8 @@ type HeroImgProps = {};
 const HeroImg: React.FC<HeroImgProps> = () => {
  
   return (
- <FadeUp>
+ <div className="px-3 hidden md:block">
+  <FadeUp>
      <div
       className="p-6 pt-0 border border-borderColor rounded-2xl max-w-[1032px] mx-auto mt-12 bg-[#f2f4f5]"
     >
@@ -21,6 +22,7 @@ const HeroImg: React.FC<HeroImgProps> = () => {
       </figure>
     </div>
  </FadeUp>
+ </div>
   );
 };
 
