@@ -7,8 +7,8 @@ type FooterProps = {};
 const Footer: React.FC<FooterProps> = () => {
   return (
     <footer className="bg-black text-white py-28">
-      <div className=" px-6 flex justify-center mx-auto">
-        <div className="pr-16 border-r border-borderColor">
+      <div className=" px-6 flex justify-center mx-auto max-sm:grid">
+        <div className="pr-16 sm:border-r max-sm:border-b border-borderColor max-sm:mb-6 max-sm:pb-8">
           <p className="text-xl semibold">Fulfillment</p>
           <a
             href="https://github.com/colemmorgan/Medihacks2024"
@@ -26,32 +26,47 @@ const Footer: React.FC<FooterProps> = () => {
             Commercial Rights Reserved.
           </p>
         </div>
-        <div className="ml-16 flex">
+        <div className="ml-16 max-sm:ml-1 flex max-sm:grid max-sm:gap-y-4">
           <div className="w-36 flex flex-col">
             <p>Features</p>
-            <div className="mt-4 text-sm flex flex-col gap-4 text-[#D1D1D1]">
-              <Link to={"/trivia"}><p className="">Versus</p></Link>
-              <Link to={"/courses"}><p>Courses</p></Link>
-             <Link to={"/notepacks"}> <p className="">Notescards</p></Link>
+            <div className="mt-2 text-sm flex flex-col gap-2 text-[#D1D1D1]">
+              <Link to={"/trivia"}>
+                <p className="">Versus</p>
+              </Link>
+              <Link to={"/courses"}>
+                <p>Courses</p>
+              </Link>
+              <Link to={"/notepacks"}>
+                {" "}
+                <p className="">Notescards</p>
+              </Link>
             </div>
           </div>
           <div className="w-36 flex flex-col">
             <p>Other</p>
-            <div className="mt-4 text-sm flex flex-col gap-4 text-[#D1D1D1]">
-              <Link to={"/dashboard"}><p className="">Dashboard</p></Link>
-              <Link to={"/"}><p className="">Home</p></Link>
+            <div className="mt-2 text-sm flex flex-col gap-2 text-[#D1D1D1]">
+              <Link to={"/dashboard"}>
+                <p className="">Dashboard</p>
+              </Link>
+              <Link to={"/"}>
+                <p className="">Home</p>
+              </Link>
             </div>
           </div>
           <div className="w-36 flex flex-col">
             <p>Auth</p>
-            <div className="mt-4 text-sm flex flex-col gap-4 text-[#D1D1D1]">
-              <Link to={"/login"}><p className="">Login</p></Link>
-              <Link to={"/signup"}><p className="">Sign Up</p></Link>
+            <div className="mt-2 text-sm flex flex-col gap-2 text-[#D1D1D1]">
+              <Link to={"/login"}>
+                <p className="">Login</p>
+              </Link>
+              <Link to={"/signup"}>
+                <p className="">Sign Up</p>
+              </Link>
             </div>
           </div>
           <div className="w-36 flex flex-col">
             <p>Legal</p>
-            <div className="mt-4 text-sm flex flex-col gap-4 text-[#D1D1D1]">
+            <div className="mt-2 text-sm flex flex-col gap-2 text-[#D1D1D1]">
               <p className="cursor-not-allowed">Terms of Use</p>
               <p className="cursor-not-allowed">Privacy Policy</p>
             </div>

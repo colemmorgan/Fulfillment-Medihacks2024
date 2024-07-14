@@ -18,15 +18,17 @@ const About: React.FC<AboutProps> = () => {
           Earn Micro-Credentials, XP, and More!
         </h4>
       </Reveal>
-      <div className="flex max-w-[1220px] w-full mx-auto gap-4 mt-16">
-        <div className="w-1/3 px-4">
+      <div className="flex max-w-[1220px] w-full mx-auto gap-4 mt-16 max-sm:grid max-sm:ml-4">
+        <div className="w-1/3 px-4 max-sm:w-10/12">
           <StaggeredFadeUp index={0}>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col">
               <p className="flex gap-3 text-2xl items-center ">
-                <span className="text-main text-4xl pb-1">
+                <span className="text-main text-4xl pb-1 max-sm:hidden">
                   <PiNumberCircleOneFill />
                 </span>
-                Pick a Game Mode
+                <span className="max-sm:text-secondary font-semibold">
+                  Pick a Game Mode
+                </span>
               </p>
               <ul className="mt-5 list-disc flex flex-col gap-5 text-lg">
                 <li>
@@ -52,14 +54,16 @@ const About: React.FC<AboutProps> = () => {
           </StaggeredFadeUp>
         </div>
 
-        <div className="w-1/3 px-4">
+        <div className="w-1/3 px-4 max-sm:w-10/12">
           <StaggeredFadeUp index={2}>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col">
               <p className="flex gap-3 text-2xl items-center">
-                <span className="text-main text-4xl pb-1">
+                <span className="text-main text-4xl pb-1 max-sm:hidden">
                   <PiNumberCircleTwoFill />
                 </span>
-                Earn Experience
+                <span className="max-sm:text-secondary font-semibold">
+                  Earn Experience
+                </span>
               </p>
               <ul className="mt-5 list-disc flex flex-col gap-5 text-lg">
                 <li>View and create notecard sets.</li>
@@ -69,14 +73,17 @@ const About: React.FC<AboutProps> = () => {
             </div>
           </StaggeredFadeUp>
         </div>
-        <div className="w-1/3 px-4">
+
+        <div className="w-1/3 px-4 max-sm:w-10/12">
           <StaggeredFadeUp index={4}>
             <div className="flex flex-col items-center">
               <p className="flex gap-3 text-2xl items-center justify-center">
-                <span className="text-main text-4xl pb-1">
+                <span className="text-main text-4xl pb-1 max-sm:hidden">
                   <PiNumberCircleThreeFill />
                 </span>
-                Gain Badges and Levels!
+                <span className="max-sm:text-secondary font-semibold">
+                  Gain Badges and Levels!
+                </span>
               </p>
               <ul className="mt-5 list-disc flex flex-col gap-5 text-lg">
                 <li>Gain badges for accomplishments.</li>
