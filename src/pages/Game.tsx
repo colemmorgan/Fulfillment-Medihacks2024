@@ -330,7 +330,7 @@ const Game: React.FC = () => {
             : "It's a tie!"}
         </p>
         {memoizedScores}
-        <div className="flex gap-3 mt-8">
+        <div className="flex gap-3 mt-8 max-sm:grid">
           <button
             onClick={() => navigate("/trivia")}
             className="bg-main hover:bg-opaque transition-all semibold py-2 px-4 rounded w-44"
@@ -346,7 +346,7 @@ const Game: React.FC = () => {
         <img
           src="/images/game-over.svg"
           alt=""
-          className="max-w-[420px] mt-20"
+          className="max-w-[420px] mt-20 max-sm:w-72"
         />
       </div>
     );
