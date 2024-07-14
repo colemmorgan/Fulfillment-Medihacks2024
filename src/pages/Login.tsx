@@ -26,7 +26,10 @@ export const Login: React.FC = () => {
         theme: "light",
       });
     try {
-      const user = await signInWithEmailAndPassword(inputs.email, inputs.password);
+      const user = await signInWithEmailAndPassword(
+        inputs.email,
+        inputs.password
+      );
       if (!user) return;
       toast.success("Successfully logged in!", {
         position: "top-center",
@@ -61,14 +64,19 @@ export const Login: React.FC = () => {
               <li>Home</li>
             </Link>
             <Link to={"/signup"}>
-            <li>Sign Up</li></Link>
+              <li>Sign Up</li>
+            </Link>
           </ul>
         </div>
       </nav>
-      <div className="flex max-w-[1200px] mx-auto gap-32 items-center px-4 pt-24">
-        <div className="relative flex flex-col   ">
+      <div className="flex max-w-[1200px] mx-auto gap-32 max-sm:gap-14 items-center px-4 pt-24 max-sm:grid">
+        <div className="relative flex flex-col items-center ">
           <p className="mb-12 semibold text-4xl text-center">Welcome Back!</p>
-          <img src="/images/login.svg" alt="" className="max-w-[500px]" />
+          <img
+            src="/images/login.svg"
+            alt=""
+            className="max-w-[500px] max-sm:w-72"
+          />
         </div>
         <div className="max-w-[450px] w-full flex flex-col items-center">
           <span className="text-main text-6xl">
