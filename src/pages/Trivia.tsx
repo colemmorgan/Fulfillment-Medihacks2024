@@ -7,12 +7,22 @@ import { toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { LandingNav } from "../components/LandingNav";
+import { LuLoader2 } from "react-icons/lu";
 
 const toastOptions: ToastOptions = {
   position: "top-center",
   autoClose: 3000,
   theme: "light",
 };
+
+const Spinny = ({ text }) => (
+  <div className="flex items-center justify-center gap-x-2">
+    <div>
+      <LuLoader2 className="animate-spin" />
+    </div>
+    <div className="mt-1">{text}</div>
+  </div>
+);
 
 const Trivia: React.FC = () => {
   const [gameId, setGameId] = useState<string | null>(null);
@@ -89,9 +99,17 @@ const Trivia: React.FC = () => {
             <button
               onClick={startNewGame}
               disabled={isLoading}
-              className="bg-main hover:bg-opaque py-2 px-4 rounded transition-all text-[#000]"
+              className={`${
+                isLoading
+                  ? "bg-opaque cursor-not-allowed"
+                  : "bg-main hover:bg-opaque"
+              } py-2 px-4 rounded transition-all text-[#000]`}
             >
-              {isLoading ? "Creating Game..." : "Start New Game"}
+              {isLoading ? (
+                <Spinny text={"Creating Game..."} />
+              ) : (
+                "Start New Game"
+              )}
             </button>
 
             <div className="h-0.5 my-4 flex self-stretch bg-opaque"></div>

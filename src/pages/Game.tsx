@@ -17,7 +17,7 @@ interface Question {
   difficulty: string;
 }
 
-const TIME_LIMIT = 10;
+const TIME_LIMIT = 25;
 
 const Game: React.FC = () => {
   // get questions
@@ -304,9 +304,13 @@ const Game: React.FC = () => {
       incrementVersusStats(user.uid, winner === user.uid); // this is making xp be given out twice for some reason
       setVersusIncremented(true);
 
+      console.log("[game:trigger] versus increment");
+
       const xpValue = winner === user.uid ? 50 : 15;
       grantXP(user.uid, "versus", xpValue);
       setXpGranted(true);
+
+      console.log(`[game:trigger] xp increment (${xpValue})`);
     }
   }, [gameOver, user, scores, versusIncremented, xpGranted]);
 
@@ -406,7 +410,7 @@ const Game: React.FC = () => {
             <button
               onClick={() => handleSubmitAnswer()}
               disabled={selectedAnswer === null}
-              className={`mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${
+              className={`mt-4 w-full bg-main hover:bg-opaque py-2 px-4 rounded transition-all text-[#000] ${
                 selectedAnswer === null ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
