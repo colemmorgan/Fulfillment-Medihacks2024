@@ -85,12 +85,13 @@ export const LandingNav = () => {
               <IoIosCloseCircle />
             </span>
             <ul className="h-full w-full flex flex-col justify-center gap-10 semibold items-center text-3xl">
-              <Link to={"/dashboard"}>Dashboard</Link>
-              <Link to={"/notepacks"}>Notecards</Link>
-              <Link to={"/courses"}>Courses</Link>
-              <Link to={"/trivia"}>Versus</Link>
-              <Link to={"/login"}>Login</Link>
-              <Link to={"/signup"}>Signup</Link>
+              <Link to={"/"} onClick={() => setShowMobileNav(false)}>Home</Link>
+              <Link to={"/dashboard"} onClick={() => setShowMobileNav(false)}>Dashboard</Link>
+              <Link to={"/notepacks"} onClick={() => setShowMobileNav(false)}>Notecards</Link>
+              <Link to={"/courses"} onClick={() => setShowMobileNav(false)}>Courses</Link>
+              <Link to={"/trivia"} onClick={() => setShowMobileNav(false)}>Versus</Link>
+              <Link to={"/login"} onClick={() => setShowMobileNav(false)}>Login</Link>
+              <Link to={"/signup"} onClick={() => setShowMobileNav(false)}>Signup</Link>
             </ul>
           </div>
         </div>
