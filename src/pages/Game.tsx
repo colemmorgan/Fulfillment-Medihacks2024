@@ -28,7 +28,6 @@ const Game: React.FC = () => {
       try {
         const fetchedQuestions = await fetchQuestions("trivia");
         if (fetchedQuestions && fetchedQuestions.questions.length > 0) {
-          // const scrambled = shuffleArray(fetchedQuestions.questions)
           setQuestions(fetchedQuestions.questions);
         }
       } catch (err) {
@@ -75,9 +74,6 @@ const Game: React.FC = () => {
     ].sort(() => Math.random() - 0.5);
   }, [currentQuestion]);
 
-  const shuffleArray = (array: Question[]): Question[] => {
-    return array.sort(() => Math.random() - 0.5);
-  };
 
   const memoizedScores = useMemo(() => {
     if (!gameData || !user) return null;

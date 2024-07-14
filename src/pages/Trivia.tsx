@@ -15,7 +15,12 @@ const toastOptions: ToastOptions = {
   theme: "light",
 };
 
-const Spinny = ({ text }) => (
+
+type SpinnyProps = {
+  text:string
+}
+
+const Spinny: React.FC<SpinnyProps> = ({ text }) => (
   <div className="flex items-center justify-center gap-x-2">
     <div>
       <LuLoader2 className="animate-spin" />
