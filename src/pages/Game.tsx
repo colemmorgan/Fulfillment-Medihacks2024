@@ -7,6 +7,7 @@ import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import grantXP from "../firebase/transactions/GrantXp";
 import fetchQuestions from "../firebase/getters/getCourseProblems";
+import incrementVersusStats from "../firebase/transactions/IncrementVersusStats";
 
 interface Question {
   id: string;
@@ -159,7 +160,7 @@ const Game: React.FC = () => {
             setTimeLeft(calculatedTimeLeft);
           }
 
-          if (data.currentQuestionIndex < 4) {
+          if (data.currentQuestionIndex < 3) {
             setCurrentQuestion(questions[data.currentQuestionIndex]);
 
             if (data.timeStarted) {
@@ -286,12 +287,12 @@ const Game: React.FC = () => {
           a[1] > b[1] ? a : b
         )[0];
       }
-
+      // winner === user.uid ? incrementVersusStats(user.uid, true) : incrementVersusStats(user.uid, false); this is making xp be given out twice for some reason 
       const xpValue = winner === user.uid ? 50 : 15;
       grantXP(user.uid, "versus", xpValue);
       setXpGranted(true);
     }
-  }, [gameOver, xpGranted, user, scores]);
+  }, [gameOver, user, scores]);
 
   if (!gameData || !currentQuestion || !user) {
     return <div>Loading...</div>;
@@ -340,7 +341,7 @@ const Game: React.FC = () => {
       ) : (
         <>
           <p className="text-xl mb-4">
-            Question {gameData.currentQuestionIndex + 1} of {4}
+            Question {gameData.currentQuestionIndex + 1} of {3}
           </p>
           <p className="text-lg mb-4">Time left: {timeLeft} seconds</p>
           <p className="text-2xl mb-6 ">{currentQuestion?.question}</p>

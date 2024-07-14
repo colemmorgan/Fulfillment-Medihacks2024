@@ -92,9 +92,9 @@ export const Home = () => {
                <div className="">
                <figure>
                   <img
-                    src="/images/sample.png"
+                    src="/images/sample2.png"
                     alt=""
-                    className=" rounded-xl"
+                    className=" rounded-xl h-[305px] w-full"
                   />
                 </figure>
               
